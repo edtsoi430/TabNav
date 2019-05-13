@@ -1,0 +1,30 @@
+<!--edtsoi-->
+<html lang="en" style="height: 260px";>
+  <head>
+    <!-- Bootstrap Core CSS ––––––––––––––––––––––––––– -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <!--    Font Awesome-->
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="popup.css" rel="stylesheet">
+  </head>
+  
+  <body>
+      <section class="container">
+        <form class="search">
+            <div>
+                <div class="input-group">
+                    <span class="input-group-prepend">
+                        <div class="input-group-text bg-transparent"><i class="fa fa-search"></i></div>
+                    </span>
+                    <input class="form-control py-2 border-left-0 border" type="search" id="input-search" placeholder="Search your tabs...">
+                </div>
+                
+                <ul class="list-group" id="tabs_results"> 
+                <!-- dynamic unordered_list -->
+                </ul>
+            </div>
+        </form>
+      </section>
+      <script src="popup.js"></script>   
+  </body>
+</html>
