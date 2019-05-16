@@ -21,23 +21,22 @@
         // Helper function to switch between tabs according to id (in active window)
         function switchTab(tabs_in, id_in){
             chrome.tabs.query({}, function(tabs){
-//                alert(tabs_in[id_in].windowId);
                 chrome.windows.update(tabs_in[id_in].windowId, {focused: true});
                 chrome.tabs.update(tabs_in[id_in].id, {active: true});
             });
         }
-//currentWindow: true
+
+
         chrome.tabs.query({}, function(tabs){        // open search
-//            var x = new String("");
             for(i = 0; i < tabs.length; i++){
-//                x += tabs[i].title + '\n';
                 var new_li = document.createElement("li");
                 var new_a = document.createElement('a');
                 new_a.innerHTML = tabs[i].title;
-//                Pass callback as function argument
+              //OnClick, executes switch tab function = >passing callback as function argument
                 new_a.addEventListener("click", switchTab.bind(null, tabs, i));
+              //OnHover, highlight tabs [still testing]
+                //new_a.addEventListener("mouseover", highlight_tabs.bind(null, tabs, i));
                 new_li.appendChild(new_a);
                 document.getElementById("tabs_results").appendChild(new_li);
             }
-//            alert(x);
         });
