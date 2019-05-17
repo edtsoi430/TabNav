@@ -9,24 +9,25 @@
   </head>
 
   <body>
-      <section class="container">
         <form class="search">
             <div>
-                <div class="input-group">
+                <div class="input-group" style="position: fixed">
                     <span class="input-group-prepend">
-                        <div class="input-group-text bg-transparent"><i class="fa fa-search"></i></div>
+                        <div class="input-group-text bg-transparent"><i class="nav-icon"></i></div>
                     </span>
                     <input class="form-control py-2 border-left-0 border" type="search" id="input-search" placeholder="Search your tabs..." autofocus />
                 </div>
 
-                <ul class="list-group" id="tabs_results">
-                <!-- dynamic unordered_list -->
-<!--                    <li><a>123</a></li>-->
-                </ul>
+
             </div>
-            <button id="mergeAll">Merge all tabs</button>
         </form>
-      </section>
+
+        <ul class="list-group" id="tabs_results">
+            <!-- dynamic unordered_list -->
+        <!--<li><a>123</a></li>-->
+        </ul>
+
+        <button class="btn btn-primary" id="mergeAll">Merge all tabs</button>
       <script src="popup.js"></script>
       <script src="merge.js"></script>
   </body>
