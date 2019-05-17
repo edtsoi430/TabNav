@@ -1,50 +1,20 @@
 /*edtsoi*/
-.search{
-  height: 30px;
-  width: 350px;
-  overflow: hidden;
-}
-
-
-body{
-    height: 480px;
-    width: auto;
-    border:0;
-    overflow: hidden;
-}
-
-.input-group{
-  border: 8px solid #f6f6f6;
-}
-
 #input-search{
     padding: 12px;
     width: 70%;
-    overflow: hidden;
 }
 
 #tabs_results {
-    /* Remove default list styling */
-    list-style-type: none;
-    left: -4px; /* move content -4px because of container left border */
-    width: auto;
-    height: 360px;
-    padding: 3px 0px;
-    border: 4px solid #f6f6f6;
-    border-left: 4px solid #8e9196;
-    background: #fff;
-    -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-    -moz-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-    box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-    overflow: scroll;
-    overflow-x: hidden;
+  /* Remove default list styling */
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
 }
 
-#tabs_results li a {
+#tabs_results li div {
   border: 1px solid #ddd; /* Add a border to all links */
   margin-top: -1px; /* Prevent double borders */
-  background-color: #f6f6f6; /* Grey background color */
-  padding: 12px; /* Add some padding */
+  padding: 8px; /* Add some padding */
   text-decoration: none; /* Remove default text underline */
   font-size: 16px; /* Increase the font-size */
   color: black; /* Add a black text color */
@@ -52,46 +22,10 @@ body{
 }
 
 #tabs_results li a:hover:not(.header) {
-  /*background-color: #eee; /* Add a hover effect to all links, except for headers */
-  color: #6fa0e9;
-  background: #e7f0f7;
+  background-color: #eee; /* Add a hover effect to all links, except for headers */
 }
 
-
-#mergeAll{
-  position: relative;
-  left: 27px;
-  bottom: -19px;
-}
-
-.nav-icon{
-  content: url('images/Icon-128.png');
-  height: 20px;
-  width: 20px;
-  display: block;
-}
-
-/*
- *  scrollbar style: blue
- */
-
-::-webkit-scrollbar-track
-{
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-    background-color: #F5F5F5;
-}
-
-::-webkit-scrollbar
-{
-    width: 10px;
-    background-color: #F5F5F5;
-}
-
-::-webkit-scrollbar-thumb
-{
-    background-color: #0ae;
-
-    background-image: -webkit-gradient(linear, 0 0, 0 100%,
-                       color-stop(.5, rgba(255, 255, 255, .2)),
-                       color-stop(.5, transparent), to(transparent));
+body{
+    height: 110%;
+    width: 500px;
 }

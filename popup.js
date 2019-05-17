@@ -22,6 +22,7 @@
         function switchTab(tabs_in, id_in){
             chrome.tabs.query({}, function(tabs){
 //                alert(tabs_in[id_in].windowId);
+
                 chrome.windows.update(tabs_in[id_in].windowId, {focused: true});
                 chrome.tabs.update(tabs_in[id_in].id, {active: true});
             });
@@ -34,8 +35,12 @@
                 var img = document.createElement("img")
                 var new_li = document.createElement("li");
                 var new_a = document.createElement('a');
+                var url = document.createElement('a');
                 var tab = document.createElement("div");
+                var full_tab = document.createElement("div");
                 var check = document.createElement("input")
+                var br = document.createElement("br")
+
 
                 if (tabs[i].favIconUrl) { 
                     img.setAttribute("src", tabs[i].favIconUrl);
@@ -49,25 +54,51 @@
                 }
 
                 img.setAttribute("alt", "Icon");
+                img.setAttribute("style", "float: left;");
+                    
+
                 img.setAttribute("style", "float: left; vertical-align: sub;");
                     
-                check.setAttribute("type", "checkbox")
-                check.setAttribute("id", "check")
-                check.setAttribute("name", "select")
+                check.setAttribute("type", "checkbox");
+                check.setAttribute("id", "check");
+                check.setAttribute("name", "select");
                 check.setAttribute("style", "float: left; vertical-align: sub;");
+
+                url.setAttribute("style", "color: grey; font-size: 66%;");
+                url.innerHTML = tabs[i].url.substring(0, 75);
+
+                if (tabs[i].url.length > 75) {
+                    url.innerHTML += "...";
+                }
 
 
                 new_a.innerHTML = tabs[i].title;
 //                Pass callback as function argument
-                new_a.addEventListener("click", switchTab.bind(null, tabs, i));
+                // tab.addEventListener("click", switchTab.bind(null, tabs, i));
 
-                // if (tabs[i].favIconUrl) {
-                       // new_li.appendChild(img);
-                // }
 
-                tab.innerHTML = check.outerHTML + img.outerHTML + new_a.outerHTML;
+                tab.addEventListener("click", switchTab.bind(null, tabs, i));
 
-                new_li.appendChild(tab);
+                // tab.appendChild(check);
+                tab.appendChild(img);
+                tab.appendChild(new_a);
+                
+                if (tabs[i].highlighted){
+                    tab.setAttribute("style", "background-color: #E2FF3A;")
+                }
+                else{
+                    tab.setAttribute("style", "background-color: #f6f6f6;")                    
+                } 
+
+                tab.appendChild(br);
+                tab.appendChild(url);
+
+                full_tab.appendChild(check)
+                full_tab.appendChild(tab)
+
+                full_tab.setAttribute("style", "background-color: #ECECEC;") 
+
+                new_li.appendChild(full_tab);
                 document.getElementById("tabs_results").appendChild(new_li);
             }
 //            alert(x);
