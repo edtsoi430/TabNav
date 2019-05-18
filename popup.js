@@ -79,15 +79,12 @@
                 new_a.appendChild(url);
                 new_a.setAttribute("draggable", true);
                 if(tabs[i].highlighted){
-                  new_li.setAttribute("style", "background-color: #E2FF3A;");
                   new_a.setAttribute("style", "background-color: #E2FF3A;");
 
                 }
 
                 new_li.appendChild(img);
                 new_li.appendChild(new_a);
-
-
                 new_li.addEventListener("click", switchTab.bind(null, tabs, i));
                 document.getElementById("tabs_results").appendChild(new_li);
             }
