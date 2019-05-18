@@ -6,9 +6,10 @@
 }
 
 
+
 body{
     height: 480px;
-    width: auto;
+    width: 350px;
     border:0;
     overflow: hidden;
 }
@@ -27,12 +28,11 @@ body{
     /* Remove default list styling */
     list-style-type: none;
     left: -4px; /* move content -4px because of container left border */
-    width: auto;
-    height: 360px;
-    padding: 3px 0px;
+    width: 350px;
+    height: 380px;
+    padding: 5px 0px;
     border: 4px solid #f6f6f6;
     border-left: 4px solid #8e9196;
-    background: #fff;
     -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
     -moz-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
     box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
@@ -40,28 +40,30 @@ body{
     overflow-x: hidden;
 }
 
-#tabs_results li a {
-  border: 1px solid #ddd; /* Add a border to all links */
-  margin-top: -1px; /* Prevent double borders */
-  background-color: #f6f6f6; /* Grey background color */
-  padding: 12px; /* Add some padding */
-  text-decoration: none; /* Remove default text underline */
-  font-size: 16px; /* Increase the font-size */
-  color: black; /* Add a black text color */
-  display: block; /* Make it into a block element to fill the whole list */
+
+#tabs_results li :hover:not(.header){
+  /*background-color: #eee; /* Add a hover effect to all links, except for headers */
+  color: #6fa0e9 !important;
+  background: #e7f0f7 !important;
 }
 
-#tabs_results li a:hover:not(.header) {
-  /*background-color: #eee; /* Add a hover effect to all links, except for headers */
-  color: #6fa0e9;
-  background: #e7f0f7;
+#tabs_results li a{
+  border: 1px solid #ddd; /* Add a border to all links */
+  margin-top: -1px; /* Prevent double borders */
+  padding: 9px; /* Add some padding */
+  font-size: 16px; /* Increase the font-size */
+  display: block; /* Make it into a block element to fill the whole list */
+  background-color: #f6f6f6; /* Grey background color */
 }
 
 
 #mergeAll{
   position: relative;
   left: 27px;
-  bottom: -19px;
+  top: 11px;
+  font-size: 80%;
+  width: 110px;
+  height: 35px;
 }
 
 .nav-icon{

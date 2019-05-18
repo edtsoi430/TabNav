@@ -22,53 +22,73 @@
         function switchTab(tabs_in, id_in){
             chrome.tabs.query({}, function(tabs){
 //                alert(tabs_in[id_in].windowId);
+
                 chrome.windows.update(tabs_in[id_in].windowId, {focused: true});
                 chrome.tabs.update(tabs_in[id_in].id, {active: true});
             });
         }
-//currentWindow: true
-        chrome.tabs.query({}, function(tabs){        // open search
-//            var x = new String("");
+
+        // Helper for parsing html. Counting occurence.
+        function count(string,char) {
+          var re = new RegExp(char,"gi");
+          return string.match(re).length;
+        }
+
+
+        chrome.tabs.query({}, function(tabs){        // display tab list
             for(i = 0; i < tabs.length; i++){
-//                x += tabs[i].title + '\n';
                 var img = document.createElement("img")
                 var new_li = document.createElement("li");
                 var new_a = document.createElement('a');
-                var tab = document.createElement("div");
-                var check = document.createElement("input")
 
-                if (tabs[i].favIconUrl) { 
+
+                if (tabs[i].favIconUrl) {
                     img.setAttribute("src", tabs[i].favIconUrl);
-                    img.setAttribute("width", "20");
-                    img.setAttribute("height", "20");
+                    img.width = 27;
+                    img.height = 27;
                 }
                 else {
                     img.setAttribute("src", "images/bulletpoint.png");
-                    img.setAttribute("width", "15");
-                    img.setAttribute("height", "15");
+                    img.width = 23;
+                    img.height = 23;
+                }
+                img.setAttribute("style", "float: left; vertical-align: middle;");
+
+                //used span to avoid two hyperlinks.
+                let name = document.createElement("span");
+                let url = document.createElement("span");
+                if(tabs[i].title.length > 80){
+                  name.innerHTML = tabs[i].title.substring(0,80) +'...' + "<br />";
+                }
+                else{
+                  name.innerHTML = tabs[i].title +"<br />";
                 }
 
-                img.setAttribute("alt", "Icon");
-                img.setAttribute("style", "float: left; vertical-align: sub;");
-                    
-                check.setAttribute("type", "checkbox")
-                check.setAttribute("id", "check")
-                check.setAttribute("name", "select")
-                check.setAttribute("style", "float: left; vertical-align: sub;");
+                name.setAttribute("style", "font-size: 95%;");
+                url.setAttribute("style", "color: grey; font-size: 66%;");
+
+                //parse address before the third slash.
+                if(count(tabs[i].url.substring(0, tabs[i].url.length-1), '/') <= 2){
+                  url.innerHTML = tabs[i].url;
+                }
+                else{
+                  url.innerHTML =  tabs[i].url.substring(0, tabs[i].url.indexOf('/', 8));
+                }
+
+                new_a.appendChild(name);
+                new_a.appendChild(url);
+                new_a.setAttribute("draggable", true);
+                if(tabs[i].highlighted){
+                  new_li.setAttribute("style", "background-color: #E2FF3A;");
+                  new_a.setAttribute("style", "background-color: #E2FF3A;");
+
+                }
+
+                new_li.appendChild(img);
+                new_li.appendChild(new_a);
 
 
-                new_a.innerHTML = tabs[i].title;
-//                Pass callback as function argument
-                new_a.addEventListener("click", switchTab.bind(null, tabs, i));
-
-                // if (tabs[i].favIconUrl) {
-                       // new_li.appendChild(img);
-                // }
-
-                tab.innerHTML = check.outerHTML + img.outerHTML + new_a.outerHTML;
-
-                new_li.appendChild(tab);
+                new_li.addEventListener("click", switchTab.bind(null, tabs, i));
                 document.getElementById("tabs_results").appendChild(new_li);
             }
-//            alert(x);
         });
