@@ -27,79 +27,70 @@
                 chrome.tabs.update(tabs_in[id_in].id, {active: true});
             });
         }
-//currentWindow: true
-        chrome.tabs.query({}, function(tabs){        // open search
-//            var x = new String("");
+
+        // Helper for parsing html. Counting occurence.
+        function count(string,char) {
+          var re = new RegExp(char,"gi");
+          return string.match(re).length;
+        }
+
+
+        chrome.tabs.query({}, function(tabs){        // display tab list
             for(i = 0; i < tabs.length; i++){
-//                x += tabs[i].title + '\n';
                 var img = document.createElement("img")
                 var new_li = document.createElement("li");
                 var new_a = document.createElement('a');
-                var url = document.createElement('a');
-                var tab = document.createElement("div");
-                var full_tab = document.createElement("div");
-                var check = document.createElement("input")
-                var br = document.createElement("br")
 
 
-                if (tabs[i].favIconUrl) { 
+
+                if (tabs[i].favIconUrl) {
                     img.setAttribute("src", tabs[i].favIconUrl);
-                    img.setAttribute("width", "20");
-                    img.setAttribute("height", "20");
+                    img.width = 27;
+                    img.height = 27;
                 }
                 else {
                     img.setAttribute("src", "images/bulletpoint.png");
-                    img.setAttribute("width", "15");
-                    img.setAttribute("height", "15");
+                    img.width = 23;
+                    img.height = 23;
                 }
+                img.setAttribute("style", "float: left; vertical-align: middle;");
 
-                img.setAttribute("alt", "Icon");
-                img.setAttribute("style", "float: left;");
-                    
-
-                img.setAttribute("style", "float: left; vertical-align: sub;");
-                    
-                check.setAttribute("type", "checkbox");
-                check.setAttribute("id", "check");
-                check.setAttribute("name", "select");
-                check.setAttribute("style", "float: left; vertical-align: sub;");
-
-                url.setAttribute("style", "color: grey; font-size: 66%;");
-                url.innerHTML = tabs[i].url.substring(0, 75);
-
-                if (tabs[i].url.length > 75) {
-                    url.innerHTML += "...";
-                }
-
-
-                new_a.innerHTML = tabs[i].title;
-//                Pass callback as function argument
-                // tab.addEventListener("click", switchTab.bind(null, tabs, i));
-
-
-                tab.addEventListener("click", switchTab.bind(null, tabs, i));
-
-                // tab.appendChild(check);
-                tab.appendChild(img);
-                tab.appendChild(new_a);
-                
-                if (tabs[i].highlighted){
-                    tab.setAttribute("style", "background-color: #E2FF3A;")
+                //used span to avoid two hyperlinks.
+                let name = document.createElement("span");
+                let url = document.createElement("span");
+                if(tabs[i].title.length > 80){
+                  name.innerHTML = tabs[i].title.substring(0,80) +'...' + "<br />";
                 }
                 else{
-                    tab.setAttribute("style", "background-color: #f6f6f6;")                    
-                } 
+                  name.innerHTML = tabs[i].title +"<br />";
+                }
 
-                tab.appendChild(br);
-                tab.appendChild(url);
+                name.setAttribute("style", "font-size: 95%;");
+                url.setAttribute("style", "color: grey; font-size: 66%;");
 
-                full_tab.appendChild(check)
-                full_tab.appendChild(tab)
+                //parse address before the third slash.
+                if(count(tabs[i].url.substring(0, tabs[i].url.length-1), '/') <= 2){
+                  url.innerHTML = tabs[i].url;
+                }
+                else{
+                  url.innerHTML =  tabs[i].url.substring(0, tabs[i].url.indexOf('/', 8));
+                }
 
-                full_tab.setAttribute("style", "background-color: #ECECEC;") 
+                new_a.appendChild(name);
+                new_a.appendChild(url);
+                new_a.setAttribute("draggable", true);
+                if(tabs[i].highlighted){
+                  new_li.setAttribute("style", "background-color: #E2FF3A;");
+                  new_a.setAttribute("style", "background-color: #E2FF3A;");
 
-                new_li.appendChild(full_tab);
+                }
+
+                new_li.appendChild(img);
+                new_li.appendChild(new_a);
+
+
+                new_li.addEventListener("click", switchTab.bind(null, tabs, i));
+
                 document.getElementById("tabs_results").appendChild(new_li);
             }
-//            alert(x);
         });
