@@ -42,6 +42,7 @@
                 var new_a = document.createElement('a');
 
 
+
                 if (tabs[i].favIconUrl) {
                     img.setAttribute("src", tabs[i].favIconUrl);
                     img.width = 27;
@@ -89,6 +90,7 @@
 
 
                 new_li.addEventListener("click", switchTab.bind(null, tabs, i));
+
                 document.getElementById("tabs_results").appendChild(new_li);
             }
         });
