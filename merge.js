@@ -1,17 +1,12 @@
 function merge(){
-
-    var windowId_1;
-
-    chrome.windows.getLastFocused({populate: true}, function(window){
-      windowId_1 = window.id;
-    });
-
-    chrome.tabs.query({lastFocusedWindow: false}, function(tabs){
+    chrome.tabs.query({}, function(tabs){
+    // change windowId_1 to active_tab_windowId
+    var windowId_1 = tabs[0].windowId;
     var list = [];
-    for(i = 0; i < tabs.length; i++){
-    //    if(tabs[i].windowId != windowId_1){     //added filter in query to avoid comparison
+    for(i=1; i < tabs.length; i++){
+        if(tabs[i].windowId != windowId_1){
             list.push(tabs[i].id);
-      //  }
+        }   
     }
     chrome.tabs.move(list, {windowId : windowId_1, index: -1});
     });

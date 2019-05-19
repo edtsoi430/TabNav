@@ -1,6 +1,6 @@
 // edtsoi
 {
-  "name": "Tab Search",
+  "name": "Tab Nav",
   "version": "1.0.0",
   "description": "An extension that allows you to quickly search through your current active tabs.",
   "permissions": ["activeTab", "declarativeContent", "storage", "tabs"],
