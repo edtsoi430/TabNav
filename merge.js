@@ -2,7 +2,7 @@ function merge(){
 
     var windowId_1;
 
-    chrome.windows.getLastFocused({populate: true}, function(window){
+    chrome.windows.getLastFocused(function(window){
       windowId_1 = window.id;
     });
 
