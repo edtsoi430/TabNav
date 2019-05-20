@@ -78,9 +78,15 @@
                 new_a.appendChild(name);
                 new_a.appendChild(url);
                 new_a.setAttribute("draggable", true);
-                if(tabs[i].highlighted){
-                  new_a.setAttribute("style", "background-color: #E2FF3A;");
 
+                //only highlight highlighted tab from the focused window
+                let cur_winid = tabs[i].windowId;
+                if(tabs[i].highlighted){
+                  chrome.windows.getLastFocused(function(window){
+                  if(window.id == cur_winid){
+                    new_a.setAttribute("style", "background-color: #E2FF3A;");
+                  }
+                });
                 }
 
                 new_li.appendChild(img);
