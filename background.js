@@ -7,7 +7,14 @@ chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
     }]);
 });
 
-// Template in case extra commands need to be done
+
+function updateBadge(tabs){
+	chrome.browserAction.setBadgeBackgroundColor({ color: [255, 0, 0, 0] });
+	chrome.browserAction.setBadgeText({text: tabs.length.toString()});
+}
+
+chrome.tabs.query({}, updateBadge);
+
 
 //chrome.commands.onCommand.addListener(function(command) {
 //  chrome.tabs.query({currentWindow: true}, function(tabs) {
