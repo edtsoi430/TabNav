@@ -28,6 +28,13 @@
             });
         }
 
+        function closeTab(tabs_in, id_in){
+            chrome.tabs.query({}, function(tabs){
+//                alert(tabs_in[id_in].windowId);
+                chrome.tabs.remove(tabs_in[id_in].id);
+            });
+        }
+
         // Helper for parsing html. Counting occurence.
         function count(string,char) {
           var re = new RegExp(char,"gi");
@@ -51,11 +58,12 @@
         });
 
 
-        chrome.tabs.query({}, function(tabs){        // display tab list
+        chrome.tabs.query({}, function(tabs){ // display tab list
             for(i = 0; i < tabs.length; i++){
                 var img = document.createElement("img")
                 var new_li = document.createElement("li");
                 var new_a = document.createElement('a');
+                var x = document.createElement("img")
 
 
                 if (tabs[i].favIconUrl) {
@@ -69,6 +77,13 @@
                     img.height = 23;
                 }
                 img.setAttribute("style", "float: left; vertical-align: middle;");
+
+                x.setAttribute("src", "images/X.png");
+                x.width = 15;
+                x.height = 15;
+                x.setAttribute("style", "float: right; vertical-align: middle;");
+
+                x.addEventListener("click", closeTab.bind(null, tabs, i));
 
                 //used span to avoid two hyperlinks.
                 let name = document.createElement("span");
@@ -93,6 +108,7 @@
 
                 new_a.appendChild(name);
                 new_a.appendChild(url);
+                new_a.appendChild(x);
                 new_a.setAttribute("draggable", true);
 
                 //cur_tab from get_cur_tab_id. Used promise to solve asynchronous problem.
