@@ -72,9 +72,21 @@
           var data = ev.dataTransfer.getData("text");
           ev.target.appendChild(document.getElementById(data));
         }
+        
+        // Helper function to create new window rows in popup (for drag and drop use)
         function newWindow(){
-            
+            var dragbox = document.getElementById("dragbox");
+            var newdiv = document.createElement("div");
+            newdiv.className = "w";
+            var windowText = document.createElement("p");
+            windowText.innerHTML = "Window " + dragbox.getElementsByTagName("p").length + 2;
+            newdiv.appendChild(windowText);
+            newdiv.id = "div1";
+            dragbox.appendChild(newdiv);
         }
+
+        document.getElementById("new-window").addEventListener("click", newWindow);
+
 //        var db = document.getElementById("div1");
 //
 //        db.addEventListener("drop", function(ev){
