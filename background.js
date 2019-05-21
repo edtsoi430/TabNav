@@ -13,8 +13,13 @@ function updateBadge(tabs){
 	chrome.browserAction.setBadgeText({text: tabs.length.toString()});
 }
 
-chrome.tabs.query({}, updateBadge);
+chrome.tabs.query({}, function(tabs){
+	updateBadge(tabs);
+});
 
+// chrome.tabs.onUpdated.addListener({}, function(tabs) {
+//    updateBadge(tabs);
+// }); 
 
 //chrome.commands.onCommand.addListener(function(command) {
 //  chrome.tabs.query({currentWindow: true}, function(tabs) {
