@@ -66,6 +66,15 @@ body{
   height: 35px;
 }
 
+#new-window{
+  position: relative;
+  left: 90px;
+  top: 12px;
+  font-size: 75%;
+  width: 100px;
+  height: 35px;
+}
+
 .nav-icon{
   content: url('images/Icon-128.png');
   height: 20px;
@@ -73,6 +82,13 @@ body{
   display: block;
 }
 
+/*droppable box*/
+#div1 {
+  width: 350px;
+  height: 70px;
+  padding: 10px;
+  border: 1px solid #aaaaaa;
+}
 /*
  *  scrollbar style: blue
  */

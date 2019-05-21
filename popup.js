@@ -56,7 +56,37 @@
         get_cur_tab_id().then(function(result){
            cur_tab= result;
         });
+        
+    //drag and drop-------------------------
 
+        function allowDrop(ev) {
+          ev.preventDefault();
+        }
+
+        function drag(ev) {
+          ev.dataTransfer.setData("text", ev.target.id);
+        }
+
+        function drop(ev) {
+          ev.preventDefault();
+          var data = ev.dataTransfer.getData("text");
+          ev.target.appendChild(document.getElementById(data));
+        }
+        function newWindow(){
+            
+        }
+//        var db = document.getElementById("div1");
+//
+//        db.addEventListener("drop", function(ev){
+//            ev.preventDefault();
+//            var data = ev.dataTransfer.getData("text");
+//            ev.target.appendChild(document.getElementById("123"));  
+//        });
+//        db.addEventListener("dragover", function(ev){
+//            ev.preventDefault();
+//        });
+
+    //--------------------------------------
 
         chrome.tabs.query({}, function(tabs){ // display tab list
             for(i = 0; i < tabs.length; i++){
@@ -110,6 +140,7 @@
                 new_a.appendChild(url);
                 new_a.appendChild(x);
                 new_a.setAttribute("draggable", true);
+//                new_a.addEventListener("dragstart", drag.bind(null, event));
 
                 //cur_tab from get_cur_tab_id. Used promise to solve asynchronous problem.
                 if(tabs[i].id == cur_tab.id){
@@ -119,6 +150,10 @@
                 new_li.appendChild(img);
                 new_li.appendChild(new_a);
                 new_li.addEventListener("click", switchTab.bind(null, tabs, i));
+                if(i == 0){
+                    new_li.Id = "123";
+                }
+
                 document.getElementById("tabs_results").appendChild(new_li);
             }
         });
