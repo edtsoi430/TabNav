@@ -34,6 +34,22 @@
           return string.match(re).length;
         }
 
+        //return promise using asynchronous query
+        function get_cur_tab_id(){
+          var promise = new Promise(function(resolve, reject){
+            chrome.tabs.query({highlighted: true, lastFocusedWindow: true}, function(tabs){
+               resolve(tabs[0]);
+            });
+          })
+          return promise;
+        };
+
+        //chain the promise to solve asynchronous problem
+        var cur_tab;
+        get_cur_tab_id().then(function(result){
+           cur_tab= result;
+        });
+
 
         chrome.tabs.query({}, function(tabs){        // display tab list
             for(i = 0; i < tabs.length; i++){
@@ -79,15 +95,10 @@
                 new_a.appendChild(url);
                 new_a.setAttribute("draggable", true);
 
-                //only highlight highlighted tab from the focused window
-                let cur_winid = tabs[i].windowId;
-                if(tabs[i].highlighted){
-                  chrome.windows.getLastFocused(function(window){
-                  if(window.id == cur_winid){
-                    new_a.setAttribute("style", "background-color: #E2FF3A;");
-                  }
-                });
-                }
+                //cur_tab from get_cur_tab_id. Used promise to solve asynchronous problem.
+                if(tabs[i].id == cur_tab.id){
+                  new_a.setAttribute("style", "background-color: #E2FF3A;");
+                };
 
                 new_li.appendChild(img);
                 new_li.appendChild(new_a);
