@@ -109,7 +109,7 @@
                 }
                 span.setAttribute("aria-hidden", "true");
                 span.innerHTML = "&times;";
-                span.className="closeSpan";
+                x.className="closeSpan";
 
                 img.setAttribute("style", "float: left; vertical-align: middle;");
                 x.setAttribute("type", "button");
@@ -156,6 +156,5 @@
                 new_li.appendChild(new_a);
                 new_li.addEventListener("click", switchTab.bind(null, tabs, i));
                 document.getElementById("tabs_results").appendChild(new_li);
-//                document.getElementById("tabs_results").appendChild(x);
             }
         });
