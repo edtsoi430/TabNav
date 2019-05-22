@@ -22,16 +22,16 @@
         function switchTab(tabs_in, id_in){
             chrome.tabs.query({}, function(tabs){
 //                alert(tabs_in[id_in].windowId);
-
                 chrome.windows.update(tabs_in[id_in].windowId, {focused: true});
                 chrome.tabs.update(tabs_in[id_in].id, {active: true});
             });
         }
 
+
         function closeTab(tabs_in, id_in){
             chrome.tabs.query({}, function(tabs){
-//                alert(tabs_in[id_in].windowId);
                 chrome.tabs.remove(tabs_in[id_in].id);
+                event.stopPropagation();
             });
         }
 
@@ -79,24 +79,13 @@
             var newdiv = document.createElement("div");
             newdiv.className = "w";
             var windowText = document.createElement("p");
-            windowText.innerHTML = "Window " + dragbox.getElementsByTagName("p").length + 2;
+            windowText.innerHTML = "Window";
             newdiv.appendChild(windowText);
             newdiv.id = "div1";
             dragbox.appendChild(newdiv);
         }
 
         document.getElementById("new-window").addEventListener("click", newWindow);
-
-//        var db = document.getElementById("div1");
-//
-//        db.addEventListener("drop", function(ev){
-//            ev.preventDefault();
-//            var data = ev.dataTransfer.getData("text");
-//            ev.target.appendChild(document.getElementById("123"));  
-//        });
-//        db.addEventListener("dragover", function(ev){
-//            ev.preventDefault();
-//        });
 
     //--------------------------------------
 
@@ -105,8 +94,8 @@
                 var img = document.createElement("img")
                 var new_li = document.createElement("li");
                 var new_a = document.createElement('a');
-                var x = document.createElement("img")
-
+                var x = document.createElement("button");
+                var span = document.createElement("span");
 
                 if (tabs[i].favIconUrl) {
                     img.setAttribute("src", tabs[i].favIconUrl);
@@ -118,13 +107,19 @@
                     img.width = 23;
                     img.height = 23;
                 }
-                img.setAttribute("style", "float: left; vertical-align: middle;");
+                span.setAttribute("aria-hidden", "true");
+                span.innerHTML = "&times;";
+                span.className="closeSpan";
 
-                x.setAttribute("src", "images/X.png");
+                img.setAttribute("style", "float: left; vertical-align: middle;");
+                x.setAttribute("type", "button");
+                x.setAttribute("class", "close");
+                x.setAttribute("aria-label", "close");
                 x.width = 15;
                 x.height = 15;
                 x.setAttribute("style", "float: right; vertical-align: middle;");
-
+                x.appendChild(span);
+                
                 x.addEventListener("click", closeTab.bind(null, tabs, i));
 
                 //used span to avoid two hyperlinks.
@@ -152,20 +147,15 @@
                 new_a.appendChild(url);
                 new_a.appendChild(x);
                 new_a.setAttribute("draggable", true);
-//                new_a.addEventListener("dragstart", drag.bind(null, event));
 
                 //cur_tab from get_cur_tab_id. Used promise to solve asynchronous problem.
                 if(tabs[i].id == cur_tab.id){
                   new_a.setAttribute("style", "background-color: #E2FF3A;");
                 };
-
                 new_li.appendChild(img);
                 new_li.appendChild(new_a);
                 new_li.addEventListener("click", switchTab.bind(null, tabs, i));
-                if(i == 0){
-                    new_li.Id = "123";
-                }
-
                 document.getElementById("tabs_results").appendChild(new_li);
+//                document.getElementById("tabs_results").appendChild(x);
             }
         });

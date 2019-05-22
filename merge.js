@@ -9,9 +9,7 @@ function merge(){
     chrome.tabs.query({lastFocusedWindow: false}, function(tabs){
     var list = [];
     for(i = 0; i < tabs.length; i++){
-    //    if(tabs[i].windowId != windowId_1){     //added filter in query to avoid comparison
-            list.push(tabs[i].id);
-      //  }
+        list.push(tabs[i].id);
     }
     chrome.tabs.move(list, {windowId : windowId_1, index: -1});
     });

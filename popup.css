@@ -5,7 +5,9 @@
   overflow: hidden;
 }
 
-
+.closeSpan{
+    z-index: 100;
+}
 
 body{
     height: 480px;
@@ -25,10 +27,10 @@ body{
 }
 
 #tabs_results {
-    /* Remove default list styling */
+
     list-style-type: none;
-    left: -4px; /* move content -4px because of container left border */
-    width: 350px;
+    left: -4px; 
+    width: 330px;
     height: 380px;
     padding: 5px 0px;
     border: 4px solid #f6f6f6;
@@ -39,7 +41,6 @@ body{
     overflow: scroll;
     overflow-x: hidden;
 }
-
 
 #tabs_results li :hover:not(.header){
   /*background-color: #eee; /* Add a hover effect to all links, except for headers */
