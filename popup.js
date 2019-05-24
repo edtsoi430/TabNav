@@ -89,72 +89,154 @@
 
     //--------------------------------------
 
-        chrome.tabs.query({}, function(tabs){ // display tab list
-            for(i = 0; i < tabs.length; i++){
-                var img = document.createElement("img")
-                var new_li = document.createElement("li");
-                var new_a = document.createElement('a');
-                var x = document.createElement("button");
-                var span = document.createElement("span");
+        // chrome.tabs.query({}, function(tabs){ // display tab list
+        //     for(i = 0; i < tabs.length; i++){
+        //         var img = document.createElement("img")
+        //         var new_li = document.createElement("li");
+        //         var new_a = document.createElement('a');
+        //         var x = document.createElement("button");
+        //         var span = document.createElement("span");
 
-                if (tabs[i].favIconUrl) {
-                    img.setAttribute("src", tabs[i].favIconUrl);
-                    img.width = 27;
-                    img.height = 27;
-                }
-                else {
-                    img.setAttribute("src", "images/bulletpoint.png");
-                    img.width = 23;
-                    img.height = 23;
-                }
-                span.setAttribute("aria-hidden", "true");
-                span.innerHTML = "&times;";
-                x.className="closeSpan";
+        //         if (tabs[i].favIconUrl) {
+        //             img.setAttribute("src", tabs[i].favIconUrl);
+        //             img.width = 27;
+        //             img.height = 27;
+        //         }
+        //         else {
+        //             img.setAttribute("src", "images/bulletpoint.png");
+        //             img.width = 23;
+        //             img.height = 23;
+        //         }
+        //         span.setAttribute("aria-hidden", "true");
+        //         span.innerHTML = "&times;";
+        //         x.className="closeSpan";
 
-                img.setAttribute("style", "float: left; vertical-align: middle;");
-                x.setAttribute("type", "button");
-                x.setAttribute("class", "close");
-                x.setAttribute("aria-label", "close");
-                x.width = 15;
-                x.height = 15;
-                x.setAttribute("style", "float: right; vertical-align: middle;");
-                x.appendChild(span);
+        //         img.setAttribute("style", "float: left; vertical-align: middle;");
+        //         x.setAttribute("type", "button");
+        //         x.setAttribute("class", "close");
+        //         x.setAttribute("aria-label", "close");
+        //         x.width = 15;
+        //         x.height = 15;
+        //         x.setAttribute("style", "float: right; vertical-align: middle;");
+        //         x.appendChild(span);
                 
-                x.addEventListener("click", closeTab.bind(null, tabs, i));
+        //         x.addEventListener("click", closeTab.bind(null, tabs, i));
 
-                //used span to avoid two hyperlinks.
-                let name = document.createElement("span");
-                let url = document.createElement("span");
-                if(tabs[i].title.length > 80){
-                  name.innerHTML = tabs[i].title.substring(0,80) +'...' + "<br />";
+        //         //used span to avoid two hyperlinks.
+        //         let name = document.createElement("span");
+        //         let url = document.createElement("span");
+        //         if(tabs[i].title.length > 80){
+        //           name.innerHTML = tabs[i].title.substring(0,80) +'...' + "<br />";
+        //         }
+        //         else{
+        //           name.innerHTML = tabs[i].title +"<br />";
+        //         }
+
+        //         name.setAttribute("style", "font-size: 95%;");
+        //         url.setAttribute("style", "color: grey; font-size: 66%;");
+
+        //         //parse address before the third slash.
+        //         if(count(tabs[i].url.substring(0, tabs[i].url.length-1), '/') <= 2){
+        //           url.innerHTML = tabs[i].url;
+        //         }
+        //         else{
+        //           url.innerHTML =  tabs[i].url.substring(0, tabs[i].url.indexOf('/', 8));
+        //         }
+
+        //         new_a.appendChild(name);
+        //         new_a.appendChild(url);
+        //         new_a.appendChild(x);
+        //         new_a.setAttribute("draggable", true);
+
+        //         //cur_tab from get_cur_tab_id. Used promise to solve asynchronous problem.
+        //         if(tabs[i].id == cur_tab.id){
+        //           new_a.setAttribute("style", "background-color: #E2FF3A;");
+        //         };
+        //         new_li.appendChild(img);
+        //         new_li.appendChild(new_a);
+        //         new_li.addEventListener("click", switchTab.bind(null, tabs, i));
+        //         document.getElementById("tabs_results").appendChild(new_li);
+        //     }
+        // });
+
+
+        chrome.windows.getAll({populate: true,}, function(windows){
+            for(i = 0; i < windows.length; i++){
+                var title = document.createElement('div');
+                title.setAttribute("ondrop", "drop(event)");
+                title.setAttribute("ondragover", "allowDrop(event)");
+                title.setAttribute("style", "background-color: #EEF3FF;");
+
+
+                title.innerHTML = "<b>" + "Window " + (i + 1).toString() + "</b>";
+                document.getElementById("tabs_results").appendChild(title);
+
+                for(j = 0; j < windows[i].tabs.length; j++){
+                    var img = document.createElement("img")
+                    var new_li = document.createElement("li");
+                    var new_a = document.createElement('a');
+                    var x = document.createElement("button");
+                    var span = document.createElement("span");
+
+                    if (windows[i].tabs[j].favIconUrl) {
+                        img.setAttribute("src", windows[i].tabs[j].favIconUrl);
+                        img.width = 22;
+                        img.height = 22;
+                    }
+                    else {
+                        img.setAttribute("src", "images/bulletpoint.png");
+                        img.width = 18;
+                        img.height = 18;
+                    }
+                    span.setAttribute("aria-hidden", "true");
+                    span.innerHTML = "&times;";
+                    x.className="closeSpan";
+
+                    img.setAttribute("style", "float: left; vertical-align: middle;");
+                    x.setAttribute("type", "button");
+                    x.setAttribute("class", "close");
+                    x.setAttribute("aria-label", "close");
+                    x.width = 15;
+                    x.height = 15;
+                    x.setAttribute("style", "float: right; vertical-align: middle;");
+                    x.appendChild(span);
+                    
+                    x.addEventListener("click", closeTab.bind(null, windows[i].tabs, j));
+
+                    //used span to avoid two hyperlinks.
+                    let name = document.createElement("span");
+                    let url = document.createElement("span");
+                    if(windows[i].tabs[j].title.length > 80){
+                      name.innerHTML = windows[i].tabs[j].title.substring(0,80) +'...' + "<br />";
+                    }
+                    else{
+                      name.innerHTML = windows[i].tabs[j].title +"<br />";
+                    }
+
+                    name.setAttribute("style", "font-size: 80%;");
+                    url.setAttribute("style", "color: grey; font-size: 60%;");
+
+                    //parse address before the third slash.
+                    if(count(windows[i].tabs[j].url.substring(0, windows[i].tabs[j].url.length-1), '/') <= 2){
+                      url.innerHTML = windows[i].tabs[j].url;
+                    }
+                    else{
+                      url.innerHTML =  windows[i].tabs[j].url.substring(0, windows[i].tabs[j].url.indexOf('/', 8));
+                    }
+
+                    new_a.appendChild(name);
+                    new_a.appendChild(url);
+                    new_a.appendChild(x);
+                    new_a.setAttribute("draggable", true);
+
+                    //cur_tab from get_cur_tab_id. Used promise to solve asynchronous problem.
+                    if(windows[i].tabs[j].id == cur_tab.id){
+                      new_a.setAttribute("style", "background-color: #E2FF3A;");
+                    };
+                    new_li.appendChild(img);
+                    new_li.appendChild(new_a);
+                    new_li.addEventListener("click", switchTab.bind(null, windows[i].tabs, j));
+                    document.getElementById("tabs_results").appendChild(new_li);
                 }
-                else{
-                  name.innerHTML = tabs[i].title +"<br />";
-                }
-
-                name.setAttribute("style", "font-size: 95%;");
-                url.setAttribute("style", "color: grey; font-size: 66%;");
-
-                //parse address before the third slash.
-                if(count(tabs[i].url.substring(0, tabs[i].url.length-1), '/') <= 2){
-                  url.innerHTML = tabs[i].url;
-                }
-                else{
-                  url.innerHTML =  tabs[i].url.substring(0, tabs[i].url.indexOf('/', 8));
-                }
-
-                new_a.appendChild(name);
-                new_a.appendChild(url);
-                new_a.appendChild(x);
-                new_a.setAttribute("draggable", true);
-
-                //cur_tab from get_cur_tab_id. Used promise to solve asynchronous problem.
-                if(tabs[i].id == cur_tab.id){
-                  new_a.setAttribute("style", "background-color: #E2FF3A;");
-                };
-                new_li.appendChild(img);
-                new_li.appendChild(new_a);
-                new_li.addEventListener("click", switchTab.bind(null, tabs, i));
-                document.getElementById("tabs_results").appendChild(new_li);
             }
         });
