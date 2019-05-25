@@ -28,10 +28,15 @@
         }
 
 
-        function closeTab(tabs_in, id_in){
+        function closeTab(tabs_in, id_in, cur_a, cur_img){
             chrome.tabs.query({}, function(tabs){
                 chrome.tabs.remove(tabs_in[id_in].id);
             });
+            cur_a.remove();
+            cur_img.remove();
+//            $("#"+String(tabs_in[id_in].id)).remove();
+            // stop clicking child event from triggering parent event
+            event.stopPropagation();
         }
 
         // Helper for parsing html. Counting occurence.
@@ -58,19 +63,19 @@
         
     //drag and drop-------------------------
 
-        function allowDrop(ev) {
-          ev.preventDefault();
-        }
-
-        function drag(ev) {
-          ev.dataTransfer.setData("text", ev.target.id);
-        }
-
-        function drop(ev) {
-          ev.preventDefault();
-          var data = ev.dataTransfer.getData("text");
-          ev.target.appendChild(document.getElementById(data));
-        }
+//        function allowDrop(ev) {
+//          ev.preventDefault();
+//        }
+//
+//        function drag(ev) {
+//          ev.dataTransfer.setData("text", ev.target.id);
+//        }
+//
+//        function drop(ev) {
+//          ev.preventDefault();
+//          var data = ev.dataTransfer.getData("text");
+//          ev.target.appendChild(document.getElementById(data));
+//        }
         
         // Helper function to create new window rows in popup (for drag and drop use)
         function newWindow(){
@@ -87,14 +92,15 @@
         document.getElementById("new-window").addEventListener("click", newWindow);
 
     //--------------------------------------
-
+    function updateTabResults(){
         chrome.tabs.query({}, function(tabs){ // display tab list
             for(i = 0; i < tabs.length; i++){
-                var img = document.createElement("img")
+                var img = document.createElement("img");
                 var new_li = document.createElement("li");
                 var new_a = document.createElement('a');
                 var x = document.createElement("button");
                 var span = document.createElement("span");
+                var tab_id = tabs[i].id;
 
                 if (tabs[i].favIconUrl) {
                     img.setAttribute("src", tabs[i].favIconUrl);
@@ -114,13 +120,13 @@
                 x.setAttribute("type", "button");
                 x.setAttribute("class", "close");
                 x.setAttribute("aria-label", "close");
+                x.setAttribute("id", String(tab_id));
                 x.width = 15;
                 x.height = 15;
                 x.setAttribute("style", "float: right; vertical-align: middle;");
                 x.appendChild(span);
                 
-                x.addEventListener("click", closeTab.bind(null, tabs, i));
-
+                x.addEventListener("click", closeTab.bind(null, tabs, i, new_a, img));
                 //used span to avoid two hyperlinks.
                 let name = document.createElement("span");
                 let url = document.createElement("span");
@@ -156,4 +162,6 @@
                 new_li.addEventListener("click", switchTab.bind(null, tabs, i));
                 document.getElementById("tabs_results").appendChild(new_li);
             }
-        });
+        });   
+    }
+    updateTabResults();
