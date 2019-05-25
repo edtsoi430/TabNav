@@ -111,13 +111,13 @@
 
                     if (windows[i].tabs[j].favIconUrl) {
                         img.setAttribute("src", windows[i].tabs[j].favIconUrl);
-                        img.width = 22;
-                        img.height = 22;
+                        img.width = 24;
+                        img.height = 24;
                     }
                     else {
                         img.setAttribute("src", "images/bulletpoint.png");
-                        img.width = 18;
-                        img.height = 18;
+                        img.width = 20;
+                        img.height = 20;
                     }
                     span.setAttribute("aria-hidden", "true");
                     span.innerHTML = "&times;";
