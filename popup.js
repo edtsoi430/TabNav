@@ -34,8 +34,6 @@
             });
             cur_a.remove();
             cur_img.remove();
-//            $("#"+String(tabs_in[id_in].id)).remove();
-            // stop clicking child event from triggering parent event
             event.stopPropagation();
         }
 
@@ -134,7 +132,7 @@
                     x.setAttribute("style", "float: right; vertical-align: middle;");
                     x.appendChild(span);
                     
-                    x.addEventListener("click", closeTab.bind(null, windows[i].tabs, j));
+                    x.addEventListener("click", closeTab.bind(null, windows[i].tabs, j, new_a, img));
 
                     //used span to avoid two hyperlinks.
                     let name = document.createElement("span");
