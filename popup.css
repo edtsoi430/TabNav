@@ -5,8 +5,9 @@
   overflow: hidden;
 }
 
-.closeSpan{
-    z-index: 100;
+.close{
+    z-index: 100000;
+    width:18px;
 }
 
 body{
@@ -27,7 +28,7 @@ body{
 }
 
 #tabs_results {
-
+    z-index: -100;
     list-style-type: none;
     left: -4px; 
     width: 330px;

@@ -31,7 +31,6 @@
         function closeTab(tabs_in, id_in){
             chrome.tabs.query({}, function(tabs){
                 chrome.tabs.remove(tabs_in[id_in].id);
-                event.stopPropagation();
             });
         }
 
@@ -107,11 +106,11 @@
                     img.width = 23;
                     img.height = 23;
                 }
+                img.setAttribute("style", "float: left; vertical-align: middle;");
+                
                 span.setAttribute("aria-hidden", "true");
                 span.innerHTML = "&times;";
-                x.className="closeSpan";
-
-                img.setAttribute("style", "float: left; vertical-align: middle;");
+                
                 x.setAttribute("type", "button");
                 x.setAttribute("class", "close");
                 x.setAttribute("aria-label", "close");
