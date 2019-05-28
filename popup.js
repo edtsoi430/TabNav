@@ -77,26 +77,80 @@
         
         // Helper function to create new window rows in popup (for drag and drop use)
         function newWindow(){
-            var dragbox = document.getElementById("dragbox");
-            var newdiv = document.createElement("div");
-            newdiv.className = "w";
-            var windowText = document.createElement("p");
-            windowText.innerHTML = "Window";
-            newdiv.appendChild(windowText);
-            newdiv.id = "div1";
-            dragbox.appendChild(newdiv);
+            chrome.windows.getAll({populate: true,}, function(windows){
+                console.log(tabsToMove.size);
+                if (tabsToMove.length == 0) {
+                    chrome.windows.create({type: "normal"});
+                }
+                else {
+                    var windowId_1;
+                    var window1Index = Number(tabsToMove[0].split(' ')[0]);
+                    var tab1Index = Number(tabsToMove[0].split(' ')[1]);
+                    chrome.windows.create({type: "normal",tabId: windows[window1Index].tabs[tab1Index].id}, function(window){
+                        windowId_1 = window.id;
+
+                        chrome.tabs.query({}, function(tabs){
+
+                            var list = [];
+                            for(k = 1; k < tabsToMove.length; k++) {
+                                var windowIndex = Number(tabsToMove[k].split(' ')[0]);
+                                var tabIndex = Number(tabsToMove[k].split(' ')[1]);
+                                list.push(windows[windowIndex].tabs[tabIndex].id);
+
+                            }
+
+                            // chrome.windows.getLastFocused(function(window){
+                            //   windowId_1 = window.id;
+                            // });
+
+                            chrome.tabs.move(list, {windowId : windowId_1, index: -1});
+                            tabsToMove = [];
+                        });
+
+                    });
+                }
+            });
         }
 
         document.getElementById("new-window").addEventListener("click", newWindow);
 
     //--------------------------------------
+    var tabsToMove = [];
     function updateTabResults(){
         chrome.windows.getAll({populate: true,}, function(windows){
             for(i = 0; i < windows.length; i++){
                 var title = document.createElement('div');
-                title.setAttribute("ondrop", "drop(event)");
-                title.setAttribute("ondragover", "allowDrop(event)");
-                title.setAttribute("style", "background-color: #EEF3FF;");
+                title.setAttribute("class", "window");
+                title.setAttribute("id", i);
+                title.addEventListener("click", function(e) {
+
+                        // console.log(tabsToMove.includes(tab, 0))
+                        if (!tabsToMove.size == 0) {
+                            var window1Index = Number(tabsToMove[0].split(' ')[0]);
+                            var tab1Index = Number(tabsToMove[0].split(' ')[1]);
+
+                            chrome.tabs.query({}, function(tabs){
+
+                                var list = [];
+                                for(k = 0; k < tabsToMove.length; k++) {
+                                    var windowIndex = Number(tabsToMove[k].split(' ')[0]);
+                                    var tabIndex = Number(tabsToMove[k].split(' ')[1]);
+                                    list.push(windows[windowIndex].tabs[tabIndex].id);
+                                    //console.log(windows[e.path[1].id.split(' ')[0]]);
+                                    console.log(e.path[1].id);
+                                
+
+                                }
+                                chrome.tabs.move(list, {windowId : windows[Number(e.path[1].id)].id, index: -1});
+                                tabsToMove = [];
+
+                            });
+                        }
+                        console.log(e.path[1].id);
+                        console.log(windows[Number(e.path[1].id)].tabs);
+                        // switchTab.bind(null, windows[Number(e.path[1].id)].tabs, 0);
+
+                    }, false);
 
 
                 title.innerHTML = "<b>" + "Window " + (i + 1).toString() + "</b>";
@@ -108,6 +162,11 @@
                     var new_a = document.createElement('a');
                     var x = document.createElement("button");
                     var span = document.createElement("span");
+
+                    new_li.setAttribute("id", i + " " + j);
+                    new_a.setAttribute("id", i + " " + j);
+                    span.setAttribute("id", i + " " + j);
+                    img.setAttribute("id", i + " " + j);
 
                     if (windows[i].tabs[j].favIconUrl) {
                         img.setAttribute("src", windows[i].tabs[j].favIconUrl);
@@ -162,10 +221,27 @@
 
                     //cur_tab from get_cur_tab_id. Used promise to solve asynchronous problem.
                     if(windows[i].tabs[j].id == cur_tab.id){
-                      new_a.setAttribute("style", "background-color: #E2FF3A;");
+                      new_a.setAttribute("style", "background-color: #A7E8FF;");
                     };
                     new_li.appendChild(img);
                     new_li.appendChild(new_a);
+                    new_li.addEventListener('contextmenu', function(e) {
+                        var tab = e.path[1].id;
+
+                        if (tabsToMove.includes(tab)){
+                            tabsToMove.splice(tabsToMove.indexOf(tab), 1);
+                            this.style.backgroundColor = 'transparent';
+                            var aCol = this.getElementsByTagName( 'a' );
+                            aCol[0].style.backgroundColor = 'transparent';
+                        }
+                        else {
+                            tabsToMove.push(tab);
+                            this.style.backgroundColor = 'red';
+                            var aCol = this.getElementsByTagName( 'a' );
+                            aCol[0].style.backgroundColor = '#F9B7E1';
+                        }
+                        e.preventDefault();
+                    }, false);
                     new_li.addEventListener("click", switchTab.bind(null, windows[i].tabs, j));
                     document.getElementById("tabs_results").appendChild(new_li);
                 }
