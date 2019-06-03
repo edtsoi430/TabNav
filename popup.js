@@ -85,6 +85,7 @@
                         });
                     });
                 }
+                location.reload();
             });
         }
 
@@ -138,7 +139,7 @@
 
                     if (windows[i].tabs[j].favIconUrl) {
                         img.setAttribute("src", windows[i].tabs[j].favIconUrl);
-                        img.width = img.height = 24;
+                        img.width = img.height = 25;
                     }
                     else {
                         img.setAttribute("src", "images/bulletpoint.png");
@@ -147,6 +148,7 @@
                     img.setAttribute("style", "float: left; vertical-align: middle;");  
                     span.setAttribute("aria-hidden", "true");
                     span.innerHTML = "&times;";
+                    
                     x.className="closeSpan";
                     x.setAttribute("type", "button");
                     x.setAttribute("class", "close");
@@ -154,7 +156,6 @@
                     x.setAttribute("style", "float: right; vertical-align: middle;");
                     x.width = x.height = 15;
                     x.appendChild(span);
-                    
                     x.addEventListener("click", closeTab.bind(null, windows[i].tabs, j, new_a, img));
 
                     //used span to avoid two hyperlinks.
@@ -191,7 +192,6 @@
                     new_li.appendChild(new_a);
                     new_li.addEventListener('contextmenu', function(e) {
                         var tab = e.path[1].id;
-
                         if (tabsToMove.includes(tab)){
                             tabsToMove.splice(tabsToMove.indexOf(tab), 1);
                             this.style.backgroundColor = 'transparent';
