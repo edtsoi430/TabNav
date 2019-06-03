@@ -21,6 +21,12 @@ body{
   border: 8px solid #f6f6f6;
 }
 
+/*
+#list-id{
+    height: 40px;
+}
+*/
+
 #input-search{
     padding: 12px;
     width: 70%;

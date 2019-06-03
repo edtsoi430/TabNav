@@ -59,22 +59,6 @@
            cur_tab= result;
         });
         
-    //drag and drop-------------------------
-
-//        function allowDrop(ev) {
-//          ev.preventDefault();
-//        }
-//
-//        function drag(ev) {
-//          ev.dataTransfer.setData("text", ev.target.id);
-//        }
-//
-//        function drop(ev) {
-//          ev.preventDefault();
-//          var data = ev.dataTransfer.getData("text");
-//          ev.target.appendChild(document.getElementById(data));
-//        }
-        
         // Helper function to create new window rows in popup (for drag and drop use)
         function newWindow(){
             chrome.windows.getAll({populate: true,}, function(windows){
@@ -88,9 +72,7 @@
                     var tab1Index = Number(tabsToMove[0].split(' ')[1]);
                     chrome.windows.create({type: "normal",tabId: windows[window1Index].tabs[tab1Index].id}, function(window){
                         windowId_1 = window.id;
-
                         chrome.tabs.query({}, function(tabs){
-
                             var list = [];
                             for(k = 1; k < tabsToMove.length; k++) {
                                 var windowIndex = Number(tabsToMove[k].split(' ')[0]);
@@ -98,15 +80,9 @@
                                 list.push(windows[windowIndex].tabs[tabIndex].id);
 
                             }
-
-                            // chrome.windows.getLastFocused(function(window){
-                            //   windowId_1 = window.id;
-                            // });
-
                             chrome.tabs.move(list, {windowId : windowId_1, index: -1});
                             tabsToMove = [];
                         });
-
                     });
                 }
             });
@@ -122,15 +98,13 @@
                 var title = document.createElement('div');
                 title.setAttribute("class", "window");
                 title.setAttribute("id", i);
+                title.innerHTML = "Window " + (i + 1).toString();
                 title.addEventListener("click", function(e) {
-
-                        // console.log(tabsToMove.includes(tab, 0))
                         if (!tabsToMove.size == 0) {
                             var window1Index = Number(tabsToMove[0].split(' ')[0]);
                             var tab1Index = Number(tabsToMove[0].split(' ')[1]);
 
                             chrome.tabs.query({}, function(tabs){
-
                                 var list = [];
                                 for(k = 0; k < tabsToMove.length; k++) {
                                     var windowIndex = Number(tabsToMove[k].split(' ')[0]);
@@ -138,12 +112,9 @@
                                     list.push(windows[windowIndex].tabs[tabIndex].id);
                                     //console.log(windows[e.path[1].id.split(' ')[0]]);
                                     console.log(e.path[1].id);
-                                
-
                                 }
                                 chrome.tabs.move(list, {windowId : windows[Number(e.path[1].id)].id, index: -1});
                                 tabsToMove = [];
-
                             });
                         }
                         console.log(e.path[1].id);
@@ -151,11 +122,8 @@
                         // switchTab.bind(null, windows[Number(e.path[1].id)].tabs, 0);
 
                     }, false);
-
-
-                title.innerHTML = "<b>" + "Window " + (i + 1).toString() + "</b>";
+                
                 document.getElementById("tabs_results").appendChild(title);
-
                 for(j = 0; j < windows[i].tabs.length; j++){
                     var img = document.createElement("img")
                     var new_li = document.createElement("li");
@@ -170,25 +138,21 @@
 
                     if (windows[i].tabs[j].favIconUrl) {
                         img.setAttribute("src", windows[i].tabs[j].favIconUrl);
-                        img.width = 24;
-                        img.height = 24;
+                        img.width = img.height = 24;
                     }
                     else {
                         img.setAttribute("src", "images/bulletpoint.png");
-                        img.width = 20;
-                        img.height = 20;
+                        img.width = img.height = 20;
                     }
+                    img.setAttribute("style", "float: left; vertical-align: middle;");  
                     span.setAttribute("aria-hidden", "true");
                     span.innerHTML = "&times;";
                     x.className="closeSpan";
-
-                    img.setAttribute("style", "float: left; vertical-align: middle;");
                     x.setAttribute("type", "button");
                     x.setAttribute("class", "close");
                     x.setAttribute("aria-label", "close");
-                    x.width = 15;
-                    x.height = 15;
                     x.setAttribute("style", "float: right; vertical-align: middle;");
+                    x.width = x.height = 15;
                     x.appendChild(span);
                     
                     x.addEventListener("click", closeTab.bind(null, windows[i].tabs, j, new_a, img));
