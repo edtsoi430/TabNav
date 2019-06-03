@@ -139,13 +139,13 @@
 
                     if (windows[i].tabs[j].favIconUrl) {
                         img.setAttribute("src", windows[i].tabs[j].favIconUrl);
-                        img.width = img.height = 25;
                     }
                     else {
                         img.setAttribute("src", "images/bulletpoint.png");
-                        img.width = img.height = 20;
                     }
-                    img.setAttribute("style", "float: left; vertical-align: middle;");  
+                    img.width = img.height = 30;
+                    img.setAttribute("style", "float: left; vertical-align: middle;");
+                    img.setAttribute("class", "favicon");
                     span.setAttribute("aria-hidden", "true");
                     span.innerHTML = "&times;";
                     
@@ -161,8 +161,8 @@
                     //used span to avoid two hyperlinks.
                     let name = document.createElement("span");
                     let url = document.createElement("span");
-                    if(windows[i].tabs[j].title.length > 80){
-                      name.innerHTML = windows[i].tabs[j].title.substring(0,80) +'...' + "<br />";
+                    if(windows[i].tabs[j].title.length > 40){
+                      name.innerHTML = windows[i].tabs[j].title.substring(0,40) +'...' + "<br />";
                     }
                     else{
                       name.innerHTML = windows[i].tabs[j].title +"<br />";

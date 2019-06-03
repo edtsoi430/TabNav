@@ -21,6 +21,10 @@ body{
   border: 8px solid #f6f6f6;
 }
 
+.favicon{
+    margin-top: 10px; 
+    margin-right: 3px;
+}
 /*
 #list-id{
     height: 40px;
@@ -57,7 +61,7 @@ body{
 
 #tabs_results li a{
   border: 1px solid #ddd; /* Add a border to all links */
-  margin-top: -1px; /* Prevent double borders */
+  margin-top: -1px;
   padding: 9px; /* Add some padding */
   font-size: 16px; /* Increase the font-size */
   display: block; /* Make it into a block element to fill the whole list */
