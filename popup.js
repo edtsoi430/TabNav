@@ -161,8 +161,8 @@
                     //used span to avoid two hyperlinks.
                     let name = document.createElement("span");
                     let url = document.createElement("span");
-                    if(windows[i].tabs[j].title.length > 40){
-                      name.innerHTML = windows[i].tabs[j].title.substring(0,40) +'...' + "<br />";
+                    if(windows[i].tabs[j].title.length > 35){
+                      name.innerHTML = windows[i].tabs[j].title.substring(0,35) +'...' + "<br />";
                     }
                     else{
                       name.innerHTML = windows[i].tabs[j].title +"<br />";
