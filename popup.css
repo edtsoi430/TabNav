@@ -92,6 +92,10 @@ body{
   display: block;
 }
 
+.input-group-prepend{
+  background-color: white;
+}
+
 /*droppable box*/
 #div1 {
   width: 350px;
