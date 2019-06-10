@@ -1,6 +1,6 @@
 // edtsoi
 {
-  "name": "Tab Search",
+  "name": "Tab Nav",
   "version": "1.0.0",
   "description": "An extension that allows you to quickly search through your current active tabs.",
   "permissions": ["activeTab", "declarativeContent", "storage", "tabs"],
@@ -9,7 +9,7 @@
     "scripts": ["background.js"],
     "persistent": false
   },
-  "page_action": {
+  "browser_action": {
     "default_popup": "popup.html",
     "default_icon": {
       "16": "images/Icon-16.png",
@@ -18,15 +18,15 @@
       "128": "images/Icon-128.png"
     }
   },
-  "commands": {
-    "_execute_page_action": {
+  "commands": {  
+    "_execute_browser_action": {
       "suggested_key": {
-        "default": "Ctrl+Shift+U",
-        "mac": "Command+Shift+U"
+      "default": "Ctrl+Shift+U",
+      "mac": "Command+Shift+U"
       },
       "description": "Open Tab-Search-Engine"
-    }  
-  },
+     }
+  }, 
   "icons": {
     "16": "images/Icon-16.png",
     "32": "images/Icon-32.png",
