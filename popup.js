@@ -34,6 +34,8 @@
             });
             cur_a.remove();
             cur_img.remove();
+            //location.reload();
+            // add in code that adjust height of popup upon closing
             event.stopPropagation();
         }
 
