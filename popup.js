@@ -2,7 +2,7 @@
 
 // Global variables
     var tabsToMove = [];
-    var new_win_id, tab_id;
+    var new_win_id;
 
 // Helper function to filter search result
     function filter_results() {
@@ -38,7 +38,6 @@
         });
         cur_a.remove();
         cur_img.remove();
-        // add in code that adjust height of popup upon closing
         event.stopPropagation();
     }
 
@@ -85,22 +84,17 @@
         });
     }
 
-    function noop(e){
-        for(i = 0; i < 100; i++){
-            // noop to make sure event handlers execute in order
-        }
-    }
-
     function removeBlank(e){
         chrome.windows.getAll({populate: true}, function(windows){
             chrome.tabs.query({windowId: new_win_id}, function(tabs){
                 chrome.tabs.remove(tabs[tabs.length - 1].id);
             }); 
         });
+        // Refresh popup upon exiting selective merge
         location.reload();
     }
 
-    // Use event handler to open a new window (instead of a new tab, weird behavior from chrome.windows.create)
+    // Use event handler to open a new window (instead of a new tab to get around behavior from chrome.windows.create)
     function Event(){
         this.eventHandlers = new Array();
     }
@@ -122,52 +116,19 @@
     openWindow.addHandler(removeBlank);
     //regiser one listener on some object
     document.getElementById('merge-selected').addEventListener('click',function(){
-        if(tabsToMove.length > 0){
+        if(tabsToMove.length > 0){ // do nothing if no tab is selected
             openWindow.execute();
         }
     },true);
 
-
-
-
-    //add listeners in whatever order you want them executed
-
-    // document.getElementById("new-window").addEventListener("click", function(event) {
-    //     for (var i = 0; i < listeners.length; i++) {
-    //         listeners[i]();
-    //     }
-    // });
-    //document.getElementById("merge-selected").addEventListener("click", newWindow, true);
-    //document.getElementById("merge-selected").addEventListener("click", clean, false);
 //--------------------------------------
     function updateTabResults(){
         chrome.windows.getAll({populate: true,}, function(windows){
             for(i = 0; i < windows.length; i++){
                 var title = document.createElement('div');
-                //var title = document.createElement('')
                 title.setAttribute("class", "window");
                 title.setAttribute("id", i);
                 title.innerHTML = "Window " + (i + 1).toString();
-//                title.addEventListener("click", function(e) {
-//                        if (!tabsToMove.size == 0) {
-//                            var window1Index = Number(tabsToMove[0].split(' ')[0]);
-//                            var tab1Index = Number(tabsToMove[0].split(' ')[1]);
-//
-//                            chrome.tabs.query({}, function(tabs){
-//                                var list = [];
-//                                for(k = 0; k < tabsToMove.length; k++) {
-//                                    var windowIndex = Number(tabsToMove[k].split(' ')[0]);
-//                                    var tabIndex = Number(tabsToMove[k].split(' ')[1]);
-//                                    list.push(windows[windowIndex].tabs[tabIndex].id);
-//                                    //console.log(windows[e.path[1].id.split(' ')[0]]);
-//                                }
-//                                chrome.tabs.move(list, {windowId : windows[Number(e.path[1].id)].id, index: -1});
-//                                tabsToMove = [];
-//                            });
-//                        }
-//                        // switchTab.bind(null, windows[Number(e.path[1].id)].tabs, 0);
-//                    }, false);
-
                 document.getElementById("tabs_results").appendChild(title);
                 for(j = 0; j < windows[i].tabs.length; j++){
                     var img = document.createElement("img")
@@ -258,3 +219,28 @@
         });
     }
 updateTabResults();
+
+
+
+
+// unfinished code
+
+//                title.addEventListener("click", function(e) {
+//                        if (!tabsToMove.size == 0) {
+//                            var window1Index = Number(tabsToMove[0].split(' ')[0]);
+//                            var tab1Index = Number(tabsToMove[0].split(' ')[1]);
+//
+//                            chrome.tabs.query({}, function(tabs){
+//                                var list = [];
+//                                for(k = 0; k < tabsToMove.length; k++) {
+//                                    var windowIndex = Number(tabsToMove[k].split(' ')[0]);
+//                                    var tabIndex = Number(tabsToMove[k].split(' ')[1]);
+//                                    list.push(windows[windowIndex].tabs[tabIndex].id);
+//                                    //console.log(windows[e.path[1].id.split(' ')[0]]);
+//                                }
+//                                chrome.tabs.move(list, {windowId : windows[Number(e.path[1].id)].id, index: -1});
+//                                tabsToMove = [];
+//                            });
+//                        }
+//                        // switchTab.bind(null, windows[Number(e.path[1].id)].tabs, 0);
+//                    }, false);
