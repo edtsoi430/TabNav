@@ -1,4 +1,9 @@
 //edtsoi
+
+// Global variables
+        var tabsToMove = [];
+        var new_win_id, tab_id;
+
 // Helper function to filter search result
         function filter_results() {
             var input, filter, ul, a, li, i;
@@ -21,7 +26,6 @@
         // Helper function to switch between tabs according to id (in active window)
         function switchTab(tabs_in, id_in){
             chrome.tabs.query({}, function(tabs){
-//                alert(tabs_in[id_in].windowId);
                 chrome.windows.update(tabs_in[id_in].windowId, {focused: true});
                 chrome.tabs.update(tabs_in[id_in].id, {active: true});
             });
@@ -57,44 +61,82 @@
 
         //chain the promise to solve asynchronous problem
         var cur_tab;
-        get_cur_tab_id().then(function(result){
+           get_cur_tab_id().then(function(result){
            cur_tab= result;
         });
         
-        // Helper function to create new window rows in popup (for drag and drop use)
-        function newWindow(){
-            chrome.windows.getAll({populate: true,}, function(windows){
-                console.log(tabsToMove.size);
-                if (tabsToMove.length == 0) {
-                    chrome.windows.create({type: "normal"});
-                }
-                else {
-                    var windowId_1;
-                    var window1Index = Number(tabsToMove[0].split(' ')[0]);
-                    var tab1Index = Number(tabsToMove[0].split(' ')[1]);
-                    chrome.windows.create({type: "normal",tabId: windows[window1Index].tabs[tab1Index].id}, function(window){
-                        windowId_1 = window.id;
-                        chrome.tabs.query({}, function(tabs){
-                            var list = [];
-                            for(k = 1; k < tabsToMove.length; k++) {
-                                var windowIndex = Number(tabsToMove[k].split(' ')[0]);
-                                var tabIndex = Number(tabsToMove[k].split(' ')[1]);
-                                list.push(windows[windowIndex].tabs[tabIndex].id);
-
-                            }
-                            chrome.tabs.move(list, {windowId : windowId_1, index: -1});
-                            tabsToMove = [];
-                        });
-                    });
-                }
-                location.reload();
+        function newWindow(e){
+            chrome.windows.create({}, function(win){
+                new_win_id = win.id;
             });
         }
 
-        document.getElementById("new-window").addEventListener("click", newWindow);
+        function moveTabs(e){
+            chrome.windows.getAll({populate: true}, function(windows){
+                chrome.tabs.query({}, function(tabs){
+                    var list = [], k;
+                    for(k = 0; k < tabsToMove.length; k++) {
+                        var windowIndex = Number(tabsToMove[k].split(' ')[0]);
+                        var tabIndex = Number(tabsToMove[k].split(' ')[1]);
+                        list.push(windows[windowIndex].tabs[tabIndex].id);
+                    }
+                    chrome.tabs.move(list, {windowId: new_win_id, index: 0});
+                    tabsToMove = [];
+                });
+            });
+        }
 
+        function noop(e){
+            for(i = 0; i < 100; i++){
+                // noop to make sure event handlers execute in order
+            }
+        }
+
+        function removeBlank(e){
+            chrome.windows.getAll({populate: true}, function(windows){
+                chrome.tabs.query({windowId: new_win_id}, function(tabs){
+                    chrome.tabs.remove(tabs[tabs.length - 1].id);
+                }); 
+            });
+            location.reload();
+        }
+
+        // Use event handler to open a new window (instead of a new tab, weird behavior from chrome.windows.create)
+        function Event(){
+            this.eventHandlers = new Array();
+        }
+          
+        Event.prototype.addHandler = function(eventHandler){
+            this.eventHandlers.push(eventHandler);
+        }
+          
+        Event.prototype.execute = function(){
+            for(var i = 0; i < this.eventHandlers.length; i++){
+              this.eventHandlers[i]();
+            }
+        }
+        var openWindow = new Event();
+
+        //add handler
+        openWindow.addHandler(newWindow);
+        openWindow.addHandler(moveTabs);
+        openWindow.addHandler(removeBlank);
+        //regiser one listener on some object
+        document.getElementById('merge-selected').addEventListener('click',function(){openWindow.execute();},true);
+
+        
+          
+
+        //add listeners in whatever order you want them executed
+        
+        // document.getElementById("new-window").addEventListener("click", function(event) {
+        //     for (var i = 0; i < listeners.length; i++) {
+        //         listeners[i]();
+        //     }
+        // });
+        //document.getElementById("merge-selected").addEventListener("click", newWindow, true);
+        //document.getElementById("merge-selected").addEventListener("click", clean, false);
     //--------------------------------------
-    var tabsToMove = [];
     function updateTabResults(){
         chrome.windows.getAll({populate: true,}, function(windows){
             for(i = 0; i < windows.length; i++){
@@ -205,6 +247,7 @@
                             this.style.backgroundColor = 'red';
                             var aCol = this.getElementsByTagName( 'a' );
                             aCol[0].style.backgroundColor = '#F9B7E1';
+                            console.log(e.path[1].id);
                         }
                         e.preventDefault();
                     }, false);

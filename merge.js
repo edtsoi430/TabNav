@@ -42,4 +42,4 @@ function merge(){
         console.log(tabsToMove);
     }
 }
-document.getElementById("new-window").addEventListener("click", mergeAll);
+//document.getElementById("new-window").addEventListener("click", mergeAll);
