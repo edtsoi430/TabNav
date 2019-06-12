@@ -66,6 +66,7 @@
     function newWindow(e){
         chrome.windows.create({}, function(win){
             new_win_id = win.id;
+            win.active = true;
         });
     }
 
