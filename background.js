@@ -23,6 +23,7 @@
     chrome.tabs.onRemoved.addListener(updateBadge.bind());
 //    chrome.tabs.onRemoved.addListener(updateTabResults.bind());
     chrome.tabs.onCreated.addListener(updateBadge.bind());
+    
 
 //chrome.commands.onCommand.addListener(function(command) {
 //  chrome.tabs.query({currentWindow: true}, function(tabs) {

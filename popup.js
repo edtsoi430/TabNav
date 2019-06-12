@@ -1,142 +1,141 @@
 //edtsoi
 
 // Global variables
-        var tabsToMove = [];
-        var new_win_id, tab_id;
+    var tabsToMove = [];
+    var new_win_id, tab_id;
 
 // Helper function to filter search result
-        function filter_results() {
-            var input, filter, ul, a, li, i;
-            input = document.getElementById("input-search");
-            filter = input.value.toUpperCase();
-            ul = document.getElementById("tabs_results");
-            li = ul.getElementsByTagName("li");
-            for (i = 0; i < li.length; i++) {
-                a = li[i].getElementsByTagName("a")[0];
-                let txtValue = a.innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    li[i].style.display = "";
-                } else {
-                    li[i].style.display = "none";
-                }
+    function filter_results() {
+        var input, filter, ul, a, li, i;
+        input = document.getElementById("input-search");
+        filter = input.value.toUpperCase();
+        ul = document.getElementById("tabs_results");
+        li = ul.getElementsByTagName("li");
+        for (i = 0; i < li.length; i++) {
+            a = li[i].getElementsByTagName("a")[0];
+            let txtValue = a.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                li[i].style.display = "";
+            } else {
+                li[i].style.display = "none";
             }
         }
-        document.getElementById("input-search").addEventListener("keyup", filter_results);
+    }
+    document.getElementById("input-search").addEventListener("keyup", filter_results);
 
-        // Helper function to switch between tabs according to id (in active window)
-        function switchTab(tabs_in, id_in){
-            chrome.tabs.query({}, function(tabs){
-                chrome.windows.update(tabs_in[id_in].windowId, {focused: true});
-                chrome.tabs.update(tabs_in[id_in].id, {active: true});
-            });
-        }
-
-
-        function closeTab(tabs_in, id_in, cur_a, cur_img){
-            chrome.tabs.query({}, function(tabs){
-                chrome.tabs.remove(tabs_in[id_in].id);
-            });
-            cur_a.remove();
-            cur_img.remove();
-            //location.reload();
-            // add in code that adjust height of popup upon closing
-            event.stopPropagation();
-        }
-
-        // Helper for parsing html. Counting occurence.
-        function count(string,char) {
-          var re = new RegExp(char,"gi");
-          return string.match(re).length;
-        }
-
-        //return promise using asynchronous query
-        function get_cur_tab_id(){
-          var promise = new Promise(function(resolve, reject){
-            chrome.tabs.query({highlighted: true, lastFocusedWindow: true}, function(tabs){
-               resolve(tabs[0]);
-            });
-          })
-          return promise;
-        };
-
-        //chain the promise to solve asynchronous problem
-        var cur_tab;
-           get_cur_tab_id().then(function(result){
-           cur_tab= result;
+    // Helper function to switch between tabs according to id (in active window)
+    function switchTab(tabs_in, id_in){
+        chrome.tabs.query({}, function(tabs){
+            chrome.windows.update(tabs_in[id_in].windowId, {focused: true});
+            chrome.tabs.update(tabs_in[id_in].id, {active: true});
         });
-        
-        function newWindow(e){
-            chrome.windows.create({}, function(win){
-                new_win_id = win.id;
+    }
+
+
+    function closeTab(tabs_in, id_in, cur_a, cur_img){
+        chrome.tabs.query({}, function(tabs){
+            chrome.tabs.remove(tabs_in[id_in].id);
+        });
+        cur_a.remove();
+        cur_img.remove();
+        //location.reload();
+        // add in code that adjust height of popup upon closing
+        event.stopPropagation();
+    }
+
+    // Helper for parsing html. Counting occurence.
+    function count(string,char) {
+      var re = new RegExp(char,"gi");
+      return string.match(re).length;
+    }
+
+    //return promise using asynchronous query
+    function get_cur_tab_id(){
+      var promise = new Promise(function(resolve, reject){
+        chrome.tabs.query({highlighted: true, lastFocusedWindow: true}, function(tabs){
+           resolve(tabs[0]);
+        });
+      })
+      return promise;
+    };
+
+    //chain the promise to solve asynchronous problem
+    var cur_tab;
+       get_cur_tab_id().then(function(result){
+       cur_tab= result;
+    });
+
+    function newWindow(e){
+        chrome.windows.create({}, function(win){
+            new_win_id = win.id;
+        });
+    }
+
+    function moveTabs(e){
+        chrome.windows.getAll({populate: true}, function(windows){
+            chrome.tabs.query({}, function(tabs){
+                var list = [], k;
+                for(k = 0; k < tabsToMove.length; k++) {
+                    var windowIndex = Number(tabsToMove[k].split(' ')[0]);
+                    var tabIndex = Number(tabsToMove[k].split(' ')[1]);
+                    list.push(windows[windowIndex].tabs[tabIndex].id);
+                }
+                chrome.tabs.move(list, {windowId: new_win_id, index: 0});
+                tabsToMove = [];
             });
-        }
+        });
+    }
 
-        function moveTabs(e){
-            chrome.windows.getAll({populate: true}, function(windows){
-                chrome.tabs.query({}, function(tabs){
-                    var list = [], k;
-                    for(k = 0; k < tabsToMove.length; k++) {
-                        var windowIndex = Number(tabsToMove[k].split(' ')[0]);
-                        var tabIndex = Number(tabsToMove[k].split(' ')[1]);
-                        list.push(windows[windowIndex].tabs[tabIndex].id);
-                    }
-                    chrome.tabs.move(list, {windowId: new_win_id, index: 0});
-                    tabsToMove = [];
-                });
-            });
+    function noop(e){
+        for(i = 0; i < 100; i++){
+            // noop to make sure event handlers execute in order
         }
+    }
 
-        function noop(e){
-            for(i = 0; i < 100; i++){
-                // noop to make sure event handlers execute in order
-            }
+    function removeBlank(e){
+        chrome.windows.getAll({populate: true}, function(windows){
+            chrome.tabs.query({windowId: new_win_id}, function(tabs){
+                chrome.tabs.remove(tabs[tabs.length - 1].id);
+            }); 
+        });
+    }
+
+    // Use event handler to open a new window (instead of a new tab, weird behavior from chrome.windows.create)
+    function Event(){
+        this.eventHandlers = new Array();
+    }
+
+    Event.prototype.addHandler = function(eventHandler){
+        this.eventHandlers.push(eventHandler);
+    }
+
+    Event.prototype.execute = function(){
+        for(var i = 0; i < this.eventHandlers.length; i++){
+          this.eventHandlers[i]();
         }
+    }
+    var openWindow = new Event();
 
-        function removeBlank(e){
-            chrome.windows.getAll({populate: true}, function(windows){
-                chrome.tabs.query({windowId: new_win_id}, function(tabs){
-                    chrome.tabs.remove(tabs[tabs.length - 1].id);
-                }); 
-            });
-            location.reload();
-        }
+    //add handler
+    openWindow.addHandler(newWindow);
+    openWindow.addHandler(moveTabs);
+    openWindow.addHandler(removeBlank);
+    //regiser one listener on some object
+    document.getElementById('merge-selected').addEventListener('click',function(){openWindow.execute();},true);
 
-        // Use event handler to open a new window (instead of a new tab, weird behavior from chrome.windows.create)
-        function Event(){
-            this.eventHandlers = new Array();
-        }
-          
-        Event.prototype.addHandler = function(eventHandler){
-            this.eventHandlers.push(eventHandler);
-        }
-          
-        Event.prototype.execute = function(){
-            for(var i = 0; i < this.eventHandlers.length; i++){
-              this.eventHandlers[i]();
-            }
-        }
-        var openWindow = new Event();
 
-        //add handler
-        openWindow.addHandler(newWindow);
-        openWindow.addHandler(moveTabs);
-        openWindow.addHandler(removeBlank);
-        //regiser one listener on some object
-        document.getElementById('merge-selected').addEventListener('click',function(){openWindow.execute();},true);
 
-        
-          
 
-        //add listeners in whatever order you want them executed
-        
-        // document.getElementById("new-window").addEventListener("click", function(event) {
-        //     for (var i = 0; i < listeners.length; i++) {
-        //         listeners[i]();
-        //     }
-        // });
-        //document.getElementById("merge-selected").addEventListener("click", newWindow, true);
-        //document.getElementById("merge-selected").addEventListener("click", clean, false);
-    //--------------------------------------
+    //add listeners in whatever order you want them executed
+
+    // document.getElementById("new-window").addEventListener("click", function(event) {
+    //     for (var i = 0; i < listeners.length; i++) {
+    //         listeners[i]();
+    //     }
+    // });
+    //document.getElementById("merge-selected").addEventListener("click", newWindow, true);
+    //document.getElementById("merge-selected").addEventListener("click", clean, false);
+//--------------------------------------
     function updateTabResults(){
         chrome.windows.getAll({populate: true,}, function(windows){
             for(i = 0; i < windows.length; i++){
@@ -144,30 +143,26 @@
                 title.setAttribute("class", "window");
                 title.setAttribute("id", i);
                 title.innerHTML = "Window " + (i + 1).toString();
-                title.addEventListener("click", function(e) {
-                        if (!tabsToMove.size == 0) {
-                            var window1Index = Number(tabsToMove[0].split(' ')[0]);
-                            var tab1Index = Number(tabsToMove[0].split(' ')[1]);
+//                title.addEventListener("click", function(e) {
+//                        if (!tabsToMove.size == 0) {
+//                            var window1Index = Number(tabsToMove[0].split(' ')[0]);
+//                            var tab1Index = Number(tabsToMove[0].split(' ')[1]);
+//
+//                            chrome.tabs.query({}, function(tabs){
+//                                var list = [];
+//                                for(k = 0; k < tabsToMove.length; k++) {
+//                                    var windowIndex = Number(tabsToMove[k].split(' ')[0]);
+//                                    var tabIndex = Number(tabsToMove[k].split(' ')[1]);
+//                                    list.push(windows[windowIndex].tabs[tabIndex].id);
+//                                    //console.log(windows[e.path[1].id.split(' ')[0]]);
+//                                }
+//                                chrome.tabs.move(list, {windowId : windows[Number(e.path[1].id)].id, index: -1});
+//                                tabsToMove = [];
+//                            });
+//                        }
+//                        // switchTab.bind(null, windows[Number(e.path[1].id)].tabs, 0);
+//                    }, false);
 
-                            chrome.tabs.query({}, function(tabs){
-                                var list = [];
-                                for(k = 0; k < tabsToMove.length; k++) {
-                                    var windowIndex = Number(tabsToMove[k].split(' ')[0]);
-                                    var tabIndex = Number(tabsToMove[k].split(' ')[1]);
-                                    list.push(windows[windowIndex].tabs[tabIndex].id);
-                                    //console.log(windows[e.path[1].id.split(' ')[0]]);
-                                    console.log(e.path[1].id);
-                                }
-                                chrome.tabs.move(list, {windowId : windows[Number(e.path[1].id)].id, index: -1});
-                                tabsToMove = [];
-                            });
-                        }
-                        console.log(e.path[1].id);
-                        console.log(windows[Number(e.path[1].id)].tabs);
-                        // switchTab.bind(null, windows[Number(e.path[1].id)].tabs, 0);
-
-                    }, false);
-                
                 document.getElementById("tabs_results").appendChild(title);
                 for(j = 0; j < windows[i].tabs.length; j++){
                     var img = document.createElement("img")
@@ -192,7 +187,7 @@
                     img.setAttribute("class", "favicon");
                     span.setAttribute("aria-hidden", "true");
                     span.innerHTML = "&times;";
-                    
+
                     x.className="closeSpan";
                     x.setAttribute("type", "button");
                     x.setAttribute("class", "close");
@@ -247,8 +242,8 @@
                             this.style.backgroundColor = 'red';
                             var aCol = this.getElementsByTagName( 'a' );
                             aCol[0].style.backgroundColor = '#F9B7E1';
-                            console.log(e.path[1].id);
                         }
+                        document.getElementById("merge-selected").innerHTML = "Merge selected (" + tabsToMove.length + ")";
                         e.preventDefault();
                     }, false);
                     new_li.addEventListener("click", switchTab.bind(null, windows[i].tabs, j));
@@ -257,4 +252,4 @@
             }
         });
     }
-    updateTabResults();
+updateTabResults();
