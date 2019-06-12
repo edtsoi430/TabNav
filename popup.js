@@ -200,13 +200,11 @@
                         var tab = e.path[1].id;
                         if (tabsToMove.includes(tab)){
                             tabsToMove.splice(tabsToMove.indexOf(tab), 1);
-                            this.style.backgroundColor = 'transparent';
                             var aCol = this.getElementsByTagName( 'a' );
-                            aCol[0].style.backgroundColor = 'transparent';
+                            aCol[0].style.backgroundColor = '#f6f6f6';
                         }
                         else {
                             tabsToMove.push(tab);
-                            this.style.backgroundColor = 'red';
                             var aCol = this.getElementsByTagName( 'a' );
                             aCol[0].style.backgroundColor = '#F9B7E1';
                         }
