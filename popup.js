@@ -97,6 +97,7 @@
                 chrome.tabs.remove(tabs[tabs.length - 1].id);
             }); 
         });
+        location.reload();
     }
 
     // Use event handler to open a new window (instead of a new tab, weird behavior from chrome.windows.create)

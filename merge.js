@@ -10,11 +10,11 @@ function mergeAll(){
       chrome.tabs.move(list, {windowId : tabs[0].windowId, index: -1});
       });
     });
+    location.reload();
 }
 document.getElementById("mergeAll").addEventListener("click", mergeAll);
 
 function merge(){
-
 
     // console.log(tabsToMove.includes(tab, 0))
     if (tabsToMove.size == 0){
@@ -38,8 +38,6 @@ function merge(){
         });
 
         chrome.tabs.move(list, {windowId : windowId_1, index: -1});
-
-        console.log(tabsToMove);
     }
 }
 //document.getElementById("new-window").addEventListener("click", mergeAll);
