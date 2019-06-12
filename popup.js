@@ -38,7 +38,6 @@
         });
         cur_a.remove();
         cur_img.remove();
-        //location.reload();
         // add in code that adjust height of popup upon closing
         event.stopPropagation();
     }
@@ -121,7 +120,11 @@
     openWindow.addHandler(moveTabs);
     openWindow.addHandler(removeBlank);
     //regiser one listener on some object
-    document.getElementById('merge-selected').addEventListener('click',function(){openWindow.execute();},true);
+    document.getElementById('merge-selected').addEventListener('click',function(){
+        if(tabsToMove.length > 0){
+            openWindow.execute();
+        }
+    },true);
 
 
 
@@ -140,6 +143,7 @@
         chrome.windows.getAll({populate: true,}, function(windows){
             for(i = 0; i < windows.length; i++){
                 var title = document.createElement('div');
+                //var title = document.createElement('')
                 title.setAttribute("class", "window");
                 title.setAttribute("id", i);
                 title.innerHTML = "Window " + (i + 1).toString();
