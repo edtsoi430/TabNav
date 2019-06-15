@@ -4,6 +4,12 @@
     var tabsToMove = [];
     var new_win_id;
 
+    function startRefresh() {
+        $.get('', function(data) {
+            $(document.body).html(data);    
+        });
+    }
+
 // Helper function to filter search result
     function filter_results() {
         var input, filter, ul, a, li, i;
@@ -13,7 +19,7 @@
         li = ul.getElementsByTagName("li");
         for (i = 0; i < li.length; i++) {
             a = li[i].getElementsByTagName("a")[0];
-            let txtValue = a.innerText;
+            let txtValue = a.textContent || a.innerText;
             if (txtValue.toUpperCase().indexOf(filter) > -1) {
                 li[i].style.display = "";
             } else {
@@ -32,12 +38,13 @@
     }
 
 
-    function closeTab(tabs_in, id_in, cur_a, cur_img){
+    function closeTab(tabs_in, id_in, cur_li){
         chrome.tabs.query({}, function(tabs){
             chrome.tabs.remove(tabs_in[id_in].id);
         });
-        cur_a.remove();
-        cur_img.remove();
+        cur_li.remove();
+        // location.reload();
+        // window.innerHeight = document.getElementById("box").height = document.getElementById("popup").offsetHeight;
         event.stopPropagation();
     }
 
@@ -66,7 +73,7 @@
     function newWindow(e){
         chrome.windows.create({}, function(win){
             new_win_id = win.id;
-            win.active = true;
+            win.focused = true;
         });
     }
 
@@ -162,7 +169,7 @@
                     x.setAttribute("style", "float: right; vertical-align: middle;");
                     x.width = x.height = 15;
                     x.appendChild(span);
-                    x.addEventListener("click", closeTab.bind(null, windows[i].tabs, j, new_a, img));
+                    x.addEventListener("click", closeTab.bind(null, windows[i].tabs, j, new_li));
 
                     //used span to avoid two hyperlinks.
                     let name = document.createElement("span");

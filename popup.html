@@ -15,25 +15,28 @@
   </head>
 
   <body class="box">
-        <form class="search">
-            <div>
-                <div class="input-group" style="position: fixed">
-                    <span class="input-group-prepend">
-                        <div class="input-group-text bg-transparent"><i class="nav-icon"></i></div>
-                    </span>
-                    <input class="form-control py-2 border-left-0 border" type="search" id="input-search" placeholder="Search your tabs..." autofocus />
+      <div id="popup">
+            <form class="search">
+                <div>
+                    <div class="input-group" style="position: fixed">
+                        <span class="input-group-prepend">
+                            <div class="input-group-text bg-transparent"><i class="nav-icon"></i></div>
+                        </span>
+                        <input class="form-control py-2 border-left-0 border" type="search" id="input-search" placeholder="Search your tabs..." autofocus />
+                    </div>
                 </div>
+            </form>
+              
+                <ul class="list-group" id="tabs_results">
+                        <!-- dynamic unordered_list (see popup.js) --> 
+                </ul>
+              
+            <div id="button-container">
+                <button class="btn btn-primary" id="mergeAll">Merge all tabs</button>
+                <button class="btn btn-primary" id="merge-selected">Merge selected (0)</button>
             </div>
-        </form>
-      
-        <ul class="list-group" id="tabs_results">
-                <!-- dynamic unordered_list (see popup.js) --> 
-        </ul>
-      
-        <div id="button-container">
-            <button class="btn btn-primary" id="mergeAll">Merge all tabs</button>
-            <button class="btn btn-primary" id="merge-selected">Merge selected (0)</button>
-        </div>
+
+      </div>
       <script src="popup.js"></script>
       <script src="merge.js"></script>
   </body>
