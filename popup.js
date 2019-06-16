@@ -31,20 +31,16 @@
 
     // Helper function to switch between tabs according to id (in active window)
     function switchTab(tabs_in, id_in){
-        chrome.tabs.query({}, function(tabs){
+        chrome.tabs.update(tabs_in[id_in].id, {active:true}, function(tab){
             chrome.windows.update(tabs_in[id_in].windowId, {focused: true});
-            chrome.tabs.update(tabs_in[id_in].id, {active: true});
         });
     }
-
 
     function closeTab(tabs_in, id_in, cur_li){
         chrome.tabs.query({}, function(tabs){
             chrome.tabs.remove(tabs_in[id_in].id);
         });
         cur_li.remove();
-        // location.reload();
-        // window.innerHeight = document.getElementById("box").height = document.getElementById("popup").offsetHeight;
         event.stopPropagation();
     }
 
@@ -174,6 +170,8 @@
                     //used span to avoid two hyperlinks.
                     let name = document.createElement("span");
                     let url = document.createElement("span");
+                    name.setAttribute("id", "web-name");
+                    url.setAttribute("id", "web-url");
                     if(windows[i].tabs[j].title.length > 35){
                       name.innerHTML = windows[i].tabs[j].title.substring(0,35) +'...' + "<br />";
                     }
@@ -224,6 +222,8 @@
             }
         });
     }
+
+
 updateTabResults();
 
 
