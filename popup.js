@@ -6,7 +6,7 @@
 
     function startRefresh() {
         $.get('', function(data) {
-            $(document.body).html(data);    
+            $(document.body).html(data);
         });
     }
 
@@ -69,33 +69,37 @@
     function newWindow(e){
         chrome.windows.create({}, function(win){
             new_win_id = win.id;
-            win.focused = true;
+            //win.focused = true;
         });
     }
 
     function moveTabs(e){
         chrome.windows.getAll({populate: true}, function(windows){
-            chrome.tabs.query({}, function(tabs){
-                var list = [], k;
-                for(k = 0; k < tabsToMove.length; k++) {
-                    var windowIndex = Number(tabsToMove[k].split(' ')[0]);
-                    var tabIndex = Number(tabsToMove[k].split(' ')[1]);
-                    list.push(windows[windowIndex].tabs[tabIndex].id);
-                }
-                chrome.tabs.move(list, {windowId: new_win_id, index: 0});
-                tabsToMove = [];
-            });
+          var list = [], k;
+          for(k = 0; k < tabsToMove.length; k++) {
+            var windowIndex = Number(tabsToMove[k].split(' ')[0]);
+            var tabIndex = Number(tabsToMove[k].split(' ')[1]);
+            list.push(windows[windowIndex].tabs[tabIndex].id);
+          }
+          chrome.tabs.move(list, {windowId: new_win_id, index: -1});
+          tabsToMove = [];
         });
     }
 
     function removeBlank(e){
-        chrome.windows.getAll({populate: true}, function(windows){
-            chrome.tabs.query({windowId: new_win_id}, function(tabs){
-                chrome.tabs.remove(tabs[tabs.length - 1].id);
-            }); 
+        chrome.tabs.query({windowId: new_win_id}, function(tabs){
+            chrome.tabs.remove(tabs[tabs.length - 1].id);
         });
         // Refresh popup upon exiting selective merge
         location.reload();
+    }
+
+    function focus(e){
+        chrome.windows.getAll(function(windows){
+          for(i = 0; i < windows.length; i++){
+            chrome.windows.update(windows[i].id, {focused:true});
+          }
+        });
     }
 
     // Use event handler to open a new window (instead of a new tab to get around behavior from chrome.windows.create)
@@ -118,6 +122,7 @@
     openWindow.addHandler(newWindow);
     openWindow.addHandler(moveTabs);
     openWindow.addHandler(removeBlank);
+    openWindow.addHandler(focus);
     //regiser one listener on some object
     document.getElementById('merge-selected').addEventListener('click',function(){
         if(tabsToMove.length > 0){ // do nothing if no tab is selected
@@ -222,10 +227,14 @@
             }
         });
     }
-
-
 updateTabResults();
 
+/*
+chrome.windows.getAll(function(windows){
+  let temp_id = windows[windows.length - 1].id;
+  chrome.windows.update(temp_id, {focused:true});
+});
+*/
 
 
 
