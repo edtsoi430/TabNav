@@ -96,7 +96,7 @@
     function focus(e){
         chrome.windows.getAll(function(windows){
           for(i = 0; i < windows.length; i++){
-            chrome.windows.update(windows[i].id, {focused:true});
+              chrome.windows.update(windows[i].id, {focused:true});
           }
         });
     }
@@ -115,8 +115,8 @@
           this.eventHandlers[i]();
         }
     }
+    
     var openWindow = new Event();
-
     //add handler
     openWindow.addHandler(newWindow);
     openWindow.addHandler(moveTabs);
