@@ -26,7 +26,26 @@
                 li[i].style.display = "none";
             }
         }
+
+        // filter windows
+        chrome.windows.getAll({populate: true,}, function(windows){
+            for(i = 0; i < windows.length; i++){
+                var count = 0;
+                for(j = 0; j < windows[i].tabs.length; j++){
+                    if(document.getElementById(i + " " + j).style.display == ""){
+                        count += 1;
+                    }
+                }
+                if(!count){
+                    document.getElementById(i).style.display = "none";
+                }
+                else{
+                    document.getElementById(i).style.display = "";
+                }
+            }
+        });
     }
+    
     document.getElementById("input-search").addEventListener("keyup", filter_results);
 
     // Helper function to switch between tabs according to id (in active window)
@@ -115,7 +134,7 @@
           this.eventHandlers[i]();
         }
     }
-    
+
     var openWindow = new Event();
     //add handler
     openWindow.addHandler(newWindow);
@@ -222,6 +241,7 @@
                         e.preventDefault();
                     }, false);
                     new_li.addEventListener("click", switchTab.bind(null, windows[i].tabs, j));
+                    new_li.setAttribute("style", "display: block");
                     document.getElementById("tabs_results").appendChild(new_li);
                 }
             }
