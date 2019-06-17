@@ -2,6 +2,7 @@
 .search{
   height: 30px;
   width: 350px;
+  margin-bottom: 15px;
   overflow: hidden;
 }
 
@@ -31,7 +32,7 @@ body{
 }
 
 .window{
-    margin-top: 15px;
+    margin-top: 0px;
     background-color: rgba(118, 128, 250, 0.69);
     font-family: 'Kreon', serif;
     font-size: 18px;
@@ -41,6 +42,7 @@ body{
 
 #input-search{
     padding: 8px;
+    /* padding-bottom: 15px; */
     width: 70%;
     overflow: hidden;
 }
@@ -72,11 +74,13 @@ body{
 }
 
 #web-url{
+  font-family: 'Assistant', sans-serif;
   top: 0px;
 }
 
 #web-name{
-  margin-bottom: 0px;
+  font-family: 'Assistant', sans-serif;
+  margin-bottom: 10px;
 }
 
 #tabs_results li :hover:not(.header){
@@ -88,8 +92,7 @@ body{
 #tabs_results li a{
   border: 1px solid #ddd; /* Add a border to all links */
   margin-top: -1px;
-
-  font-size: 16px; /* Increase the font-size */
+  font-size: 17px; /* Increase the font-size */
   display: block; /* Make it into a block element to fill the whole list */
   background-color: #f6f6f6; /* Grey background color */
 }

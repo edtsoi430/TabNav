@@ -90,7 +90,6 @@
         chrome.tabs.query({windowId: new_win_id}, function(tabs){
             chrome.tabs.remove(tabs[tabs.length - 1].id);
         });
-        // Refresh popup upon exiting selective merge
         location.reload();
     }
 
@@ -202,6 +201,7 @@
 
                     //cur_tab from get_cur_tab_id. Used promise to solve asynchronous problem.
                     if(windows[i].tabs[j].id == cur_tab.id){
+                        // #A7E8FF
                       new_a.setAttribute("style", "background-color: #A7E8FF;");
                     };
                     new_li.appendChild(img);
@@ -216,7 +216,7 @@
                         else {
                             tabsToMove.push(tab);
                             var aCol = this.getElementsByTagName( 'a' );
-                            aCol[0].style.backgroundColor = '#F9B7E1';
+                            aCol[0].style.backgroundColor = '#ffd27f';
                         }
                         document.getElementById("merge-selected").innerHTML = "Merge selected (" + tabsToMove.length + ")";
                         e.preventDefault();
@@ -228,13 +228,6 @@
         });
     }
 updateTabResults();
-
-/*
-chrome.windows.getAll(function(windows){
-  let temp_id = windows[windows.length - 1].id;
-  chrome.windows.update(temp_id, {focused:true});
-});
-*/
 
 
 
