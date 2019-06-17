@@ -1,8 +1,6 @@
-// edtsoi
-
 {
   "name": "Tab Nav",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "An extension that allows you to quickly search through your current active tabs.",
   "permissions": ["activeTab", "declarativeContent", "storage", "tabs"],
   "options_page": "options.html",
@@ -22,8 +20,8 @@
   "commands": {  
     "_execute_browser_action": {
       "suggested_key": {
-      "default": "Ctrl+Shift+Space",
-      "mac": "Command+Shift+Space"
+      "default": "Ctrl+E",
+      "mac": "Command+E"
       },
       "description": "Open Tab-Search-Engine"
      }
