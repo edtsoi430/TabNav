@@ -15,7 +15,6 @@ body{
     height: 100%;
     width: 350px;
     border:0;
-    /* overflow: scroll; */
     top:100%;
     bottom:0;
     left:0;
@@ -62,7 +61,6 @@ body{
     list-style-type: none;
     left: -4px;
     width: 100%;
-    /*width: 330px;*/
     padding: 5px 0px;
     border: 4px solid #f6f6f6;
     border-left: 4px solid #8e9196;

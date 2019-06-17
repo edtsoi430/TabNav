@@ -1,14 +1,13 @@
 //edtsoi
 
 // Global variables
-    var tabsToMove = [];
     var new_win_id;
-
-    function startRefresh() {
-        $.get('', function(data) {
-            $(document.body).html(data);
-        });
-    }
+    var tabsToMove = [];
+    var cur_tab;
+    var cur_tab_id;
+    var cur_win_id;
+    // dictionary that maps window_id to last tab index (for keydown keyup usage)
+    var d = {};
 
 // Helper function to filter search result
     function filter_results() {
@@ -20,11 +19,7 @@
         for (i = 0; i < li.length; i++) {
             a = li[i].getElementsByTagName("a")[0];
             let txtValue = a.textContent || a.innerText;
-            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                li[i].style.display = "";
-            } else {
-                li[i].style.display = "none";
-            }
+            li[i].style.display = (txtValue.toUpperCase().indexOf(filter) > -1) ? "" : "none";
         }
 
         // filter windows
@@ -36,16 +31,11 @@
                         count += 1;
                     }
                 }
-                if(!count){
-                    document.getElementById(i).style.display = "none";
-                }
-                else{
-                    document.getElementById(i).style.display = "";
-                }
+                document.getElementById(i).style.display = (count == 0) ? "none" : "";
             }
         });
     }
-    
+
     document.getElementById("input-search").addEventListener("keyup", filter_results);
 
     // Helper function to switch between tabs according to id (in active window)
@@ -55,11 +45,21 @@
         });
     }
 
-    function closeTab(tabs_in, id_in, cur_li){
+    function closeTab(tabs_in, win_id, tab_id, cur_li){
         chrome.tabs.query({}, function(tabs){
-            chrome.tabs.remove(tabs_in[id_in].id);
+            chrome.tabs.remove(tabs_in[tab_id].id);
         });
         cur_li.remove();
+        // d[win_id] = (d[win_id] == 0) ? 0 : (d[win_id] - 1);
+        var stored_id = win_id + " " + tab_id;
+        if(tabsToMove.includes(stored_id)){
+            tabsToMove.splice(tabsToMove.indexOf(stored_id), 1);
+        }
+
+        if(tabsToMove.length > 0){
+            tabsToMove = [];
+            location.reload();
+        }
         event.stopPropagation();
     }
 
@@ -80,15 +80,13 @@
     };
 
     //chain the promise to solve asynchronous problem
-    var cur_tab;
-       get_cur_tab_id().then(function(result){
-       cur_tab= result;
+    get_cur_tab_id().then(function(result){
+        cur_tab= result;
     });
 
     function newWindow(e){
         chrome.windows.create({}, function(win){
             new_win_id = win.id;
-            //win.focused = true;
         });
     }
 
@@ -111,7 +109,7 @@
         });
         location.reload();
     }
-
+    // Focus onto merge-selected windows
     function focus(e){
         chrome.windows.getAll(function(windows){
           for(i = 0; i < windows.length; i++){
@@ -157,6 +155,7 @@
                 title.setAttribute("id", i);
                 title.innerHTML = "Window " + (i + 1).toString();
                 document.getElementById("tabs_results").appendChild(title);
+                d[i] = windows[i].tabs.length - 1;
                 for(j = 0; j < windows[i].tabs.length; j++){
                     var img = document.createElement("img")
                     var new_li = document.createElement("li");
@@ -182,13 +181,13 @@
                     span.innerHTML = "&times;";
 
                     x.className="closeSpan";
+                    x.width = x.height = 15;
                     x.setAttribute("type", "button");
                     x.setAttribute("class", "close");
                     x.setAttribute("aria-label", "close");
                     x.setAttribute("style", "float: right; vertical-align: middle;");
-                    x.width = x.height = 15;
                     x.appendChild(span);
-                    x.addEventListener("click", closeTab.bind(null, windows[i].tabs, j, new_li));
+                    x.addEventListener("click", closeTab.bind(null, windows[i].tabs, i, j, new_li));
 
                     //used span to avoid two hyperlinks.
                     let name = document.createElement("span");
@@ -222,6 +221,8 @@
                     if(windows[i].tabs[j].id == cur_tab.id){
                         // #A7E8FF
                       new_a.setAttribute("style", "background-color: #A7E8FF;");
+                      cur_win_id = i;
+                      cur_tab_id = j;
                     };
                     new_li.appendChild(img);
                     new_li.appendChild(new_a);
@@ -247,8 +248,54 @@
             }
         });
     }
-updateTabResults();
+    function updateButtonCount(){
+        document.getElementById("merge-selected").innerHTML = "Merge selected (" + tabsToMove.length + ")";
+    }
+    // Update button count, if selected tab is closed.
+    chrome.tabs.onRemoved.addListener(updateButtonCount.bind());
 
+    $(document).keypress(function(event) {
+        if (event.key === "Enter") {
+            // switchTab()
+        }
+    });
+
+    // Unfinished code
+
+    // $(document).on('keydown.down', function() {
+    //     // alert(cur_win_id + " " + cur_tab_id);
+    //     // document.getElementById(cur_win_id + " " + cur_tab_id).childNodes[1].setAttribute("style", "background-color: #f6f6f6;");
+    //     if( document.getElementById(cur_win_id + " " + (cur_tab_id + 1)) ){
+    //         document.getElementById(cur_win_id + " " + cur_tab_id).childNodes[1].setAttribute("style", "background-color: #f6f6f6;");
+    //         document.getElementById(cur_win_id + " " + (cur_tab_id + 1)).childNodes[1].setAttribute("style", "background-color: #A7E8FF;");
+    //         cur_tab_id += 1;
+    //     }
+    //     else if( document.getElementById((cur_win_id + 1) + " " + 0) ){
+    //         console.log(cur_win_id + " " + cur_tab_id);
+    //         document.getElementById(cur_win_id + " " + cur_tab_id).childNodes[1].setAttribute("style", "background-color: #f6f6f6;");
+    //         document.getElementById((cur_win_id + 1) + " " + 0).childNodes[1].setAttribute("style", "background-color: #A7E8FF;");
+    //         cur_win_id += 1;
+    //         cur_tab_id = 0;
+    //     }
+    // });
+
+    // $(document).on('keydown.up', function() {
+    //     if( document.getElementById(cur_win_id + " " + (cur_tab_id - 1)) ){
+    //         document.getElementById(cur_win_id + " " + cur_tab_id).childNodes[1].setAttribute("style", "background-color: #f6f6f6;");
+    //         document.getElementById(cur_win_id + " " + (cur_tab_id - 1)).childNodes[1].setAttribute("style", "background-color: #A7E8FF;");
+    //         cur_tab_id -= 1;
+    //     }
+    //     else if( document.getElementById((cur_win_id - 1) + " " + d[cur_win_id - 1]) ){
+    //         document.getElementById(cur_win_id + " " + cur_tab_id).childNodes[1].setAttribute("style", "background-color: #f6f6f6;");
+    //         document.getElementById((cur_win_id - 1) + " " + d[cur_win_id - 1]).childNodes[1].setAttribute("style", "background-color: #A7E8FF;");
+    //         cur_tab_id = d[cur_win_id - 1];
+    //         cur_win_id -= 1;
+    //     }
+    // });
+
+    // Main
+    updateTabResults();
+    
 
 
 // unfinished code

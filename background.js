@@ -18,6 +18,7 @@
             chrome.browserAction.setBadgeText({text: tabs.length.toString()});
         });
     }
+
     // Update number of tabs currently opened.
     chrome.tabs.onUpdated.addListener(updateBadge.bind());
     chrome.tabs.onRemoved.addListener(updateBadge.bind());
