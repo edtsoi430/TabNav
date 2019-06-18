@@ -8,13 +8,12 @@
     });
 
     chrome.tabs.query({}, function(tabs){
-        chrome.browserAction.setBadgeBackgroundColor({ color: [255, 0, 0, 0] });
+        chrome.browserAction.setBadgeBackgroundColor({ color: "#909090" });
         chrome.browserAction.setBadgeText({text: tabs.length.toString()});
     });
         
     function updateBadge(){
         chrome.tabs.query({}, function(tabs){
-            chrome.browserAction.setBadgeBackgroundColor({ color: [255, 0, 0, 0] });
             chrome.browserAction.setBadgeText({text: tabs.length.toString()});
         });
     }

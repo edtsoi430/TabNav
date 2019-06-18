@@ -58,6 +58,7 @@
 
         if(tabsToMove.length > 0){
             tabsToMove = [];
+            setTimeout(function(){}, 1000)
             location.reload();
         }
         event.stopPropagation();
@@ -172,7 +173,7 @@
                         img.setAttribute("src", windows[i].tabs[j].favIconUrl);
                     }
                     else {
-                        img.setAttribute("src", "images/bulletpoint.png");
+                        img.setAttribute("src", 'images/grey-chrome.png');
                     }
                     img.width = img.height = 30;
                     img.setAttribute("style", "float: left; vertical-align: middle;");
