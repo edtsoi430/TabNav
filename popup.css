@@ -67,8 +67,9 @@ body{
     -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
     -moz-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
     box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-    overflow: scroll;
-    overflow-x: hidden;
+    /*overflow: scroll;
+    overflow-x: hidden;*/
+    overflow: hidden;
 }
 
 #web-url{
@@ -99,9 +100,9 @@ body{
 #mergeAll{
   background: rgba(118, 128, 250, 0.92);
   border-radius: 100px;
-  position: absolute; 
+  position: absolute;
   left: 30px;
-  bottom: 8px; 
+  bottom: 8px;
   padding: 0;
   font-size: 58%;
   width: 80px;
@@ -112,9 +113,9 @@ body{
 #merge-selected{
   background: rgba(118, 128, 250, 0.92);
   border-radius: 100px;
-  position: absolute; 
+  position: absolute;
   left: 180px;
-  bottom: 8px; 
+  bottom: 8px;
   padding: 0;
   font-size: 60%;
   width: 130px;
