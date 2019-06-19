@@ -22,8 +22,8 @@
   "commands": {
     "_execute_browser_action": {
       "suggested_key": {
-      "default": "Ctrl+Shift+Space",
-      "mac": "Command+Shift+Space"
+      "default": "Ctrl+Shift+A",
+      "mac": "Command+Shift+A"
       },
       "description": "Open Tab-Search-Engine"
      }
