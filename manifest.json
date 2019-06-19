@@ -4,7 +4,7 @@
   "name": "Tab Nav",
   "version": "1.0.0",
   "description": "An extension that allows you to quickly search through your current active tabs.",
-  "permissions": ["activeTab", "declarativeContent", "storage", "tabs"],
+  "permissions": ["declarativeContent", "tabs"],
   "options_page": "options.html",
   "background": {
     "scripts": ["background.js"],
@@ -13,13 +13,13 @@
   "browser_action": {
     "default_popup": "popup.html",
     "default_icon": {
-      "16": "images/Icon-16 (4).png",
-      "32": "images/Icon-32 (4).png",
-      "48": "images/Icon-48 (4).png",
-      "128": "images/Icon-128 (4).png"
+      "16": "images/White-Icon-16.png",
+      "32": "images/White-Icon-32.png",
+      "48": "images/White-Icon-48.png",
+      "128": "images/White-Icon-128.png"
     }
   },
-  "commands": {  
+  "commands": {
     "_execute_browser_action": {
       "suggested_key": {
       "default": "Ctrl+Shift+Space",
@@ -27,12 +27,12 @@
       },
       "description": "Open Tab-Search-Engine"
      }
-  }, 
+  },
   "icons": {
-    "16": "images/Icon-16 (4).png",
-    "32": "images/Icon-32 (4).png",
-    "48": "images/Icon-48 (4).png",
-    "128": "images/Icon-128 (4).png"
+    "16": "images/White-Icon-16.png",
+    "32": "images/White-Icon-32.png",
+    "48": "images/White-Icon-48.png",
+    "128": "images/White-Icon-128.png"
   },
   "manifest_version": 2
 }
